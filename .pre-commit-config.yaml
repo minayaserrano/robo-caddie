@@ -1,0 +1,7 @@
+-   repo: local
+    hooks:
+    -   id: pio-test
+        name: pio-test
+        entry: pio test -e native
+        pass_filenames: false
+        language: system
