@@ -1,5 +1,7 @@
 # RoboCaddie
 
+[![Build Status](https://travis-ci.com/minayaserrano/robo-caddie.svg?branch=master)](https://travis-ci.com/minayaserrano/robo-caddie)
+
 A hoverboard-powered golf trolley.
 
 ## Features
