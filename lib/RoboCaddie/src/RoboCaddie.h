@@ -12,9 +12,3 @@ public:
 };
 
 #endif
-
-RoboCaddie::RoboCaddie() {}
-
-RoboCaddie::~RoboCaddie() {}
-
-const int RoboCaddie::getStatus() { return STOP; }
