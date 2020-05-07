@@ -17,4 +17,4 @@ RoboCaddie::RoboCaddie() {}
 
 RoboCaddie::~RoboCaddie() {}
 
-const int RoboCaddie::getStatus() {}
+const int RoboCaddie::getStatus() { return STOP; }
