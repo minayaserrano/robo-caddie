@@ -5,3 +5,4 @@
         entry: pio test -e native
         pass_filenames: false
         language: system
+        stages: [push]
