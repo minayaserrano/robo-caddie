@@ -1,6 +1,6 @@
 # RoboCaddie
 
-[![CI](https://github.com/minayaserrano/robo-caddie/actions/workflows/native.yml/badge.svg)](https://github.com/minayaserrano/robo-caddie/actions/workflows/native.yml)
+[![CI](https://github.com/minayaserrano/robo-caddie/actions/workflows/ci.yml/badge.svg)](https://github.com/minayaserrano/robo-caddie/actions/workflows/ci.yml)
 
 A hoverboard-powered golf trolley.
 
