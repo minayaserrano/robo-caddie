@@ -5,13 +5,15 @@
 
 class RoboCaddie {
 private:
+  UART &uart;
+
 public:
   static const int STOP = 0;
 
-  RoboCaddie();
+  RoboCaddie(UART &);
   ~RoboCaddie();
   const int getStatus();
-  void transmission(UART &);
+  void transmission();
 };
 
 #endif

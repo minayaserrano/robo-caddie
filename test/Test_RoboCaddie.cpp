@@ -4,7 +4,8 @@
 #include <unity.h>
 
 void test_robocaddie_is_stopped_on_startup() {
-  RoboCaddie robocaddie;
+  SpyUART uart;
+  RoboCaddie robocaddie(uart);
 
   TEST_ASSERT_EQUAL(RoboCaddie::STOP, robocaddie.getStatus());
 }
@@ -40,13 +41,13 @@ void test_a_STOP_message_is_sent_to_the_motor_when_robocaddie_status_is_STOP() {
       PROTOCOL_MSG2_LEFT_WHEEL2,  PROTOCOL_MSG2_LEFT_WHEEL3,
       PROTOCOL_MSG2_LEFT_WHEEL4,  PROTOCOL_MSG2_CS};
 
-  RoboCaddie robocaddie;
   SpyUART uart;
+  RoboCaddie robocaddie(uart);
 
   // Precondition: no message sent yet on initialization
   TEST_ASSERT_NULL(uart.getLastSentMessage().data());
 
-  robocaddie.transmission(uart);
+  robocaddie.transmission();
 
   TEST_ASSERT_EQUAL_UINT8_ARRAY(
       stop_msg.data(), uart.getLastSentMessage().data(), stop_msg.size());
