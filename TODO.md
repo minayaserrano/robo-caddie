@@ -1,6 +1,8 @@
 ## TODO list
 
 - ~~RoboCaddie is stopped at startup~~
+  - RoboCaddie sends a STOP message to the motor when it is stopped
+  - RoboCaddie transmits a message to the motor every 30ms
 - RoboCaddie goes forward when it receives a forward command
 - RoboCaddie goes backward when it receives a backward command
 - RoboCaddie goes left when it receives a left command

@@ -5,3 +5,5 @@ RoboCaddie::RoboCaddie() {}
 RoboCaddie::~RoboCaddie() {}
 
 const int RoboCaddie::getStatus() { return STOP; }
+
+void RoboCaddie::transmission(UART &uart) {}
