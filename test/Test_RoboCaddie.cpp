@@ -32,7 +32,7 @@ void test_a_STOP_message_is_sent_to_the_motor_when_robocaddie_status_is_STOP() {
   const uint8_t PROTOCOL_MSG2_LEFT_WHEEL4 = 0x00;
   const uint8_t PROTOCOL_MSG2_CS = 0x90; // CheckSum (From CI to WHEEL2)
 
-  std::vector<uint8_t> stop_msg = {
+  const std::vector<uint8_t> stop_msg = {
       PROTOCOL_MSG2_SOM,          PROTOCOL_MSG2_CI,
       PROTOCOL_MSG2_LEN,          PROTOCOL_MSG2_CMD,
       PROTOCOL_MSG2_CODE,         PROTOCOL_MSG2_RIGHT_WHEEL1,
