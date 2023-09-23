@@ -14,7 +14,7 @@ void RoboCaddie::transmission() {
 }
 
 void RoboCaddie::run() {
-  if (time.getCurrentTime() - time.getStartTime() >= 30) {
+  if (time.isTick(30)) {
     transmission();
   }
 }

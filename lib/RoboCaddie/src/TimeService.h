@@ -7,8 +7,7 @@ class TimeService {
 public:
   TimeService() {}
   ~TimeService() {}
-  virtual uint64_t getCurrentTime() = 0;
-  virtual uint64_t getStartTime() = 0;
+  virtual bool isTick(uint8_t milliseconds) = 0;
 };
 
 class FakeTimeService : public TimeService {
@@ -18,10 +17,14 @@ private:
 
 public:
   FakeTimeService() : TimeService() {}
+
   void setCurrentTime(uint64_t time) { currentTime = time; }
+
   void setStartTime(uint64_t time) { startTime = time; }
-  uint64_t getCurrentTime() { return currentTime; }
-  uint64_t getStartTime() { return startTime; }
+
+  bool isTick(uint8_t milliseconds) {
+    return (currentTime - startTime) >= milliseconds;
+  }
 };
 
 #endif
