@@ -1,6 +1,7 @@
 #ifdef UNIT_TEST
 
 #include <RoboCaddie.h>
+#include <TimeService.h>
 #include <unity.h>
 
 void test_robocaddie_is_stopped_on_startup() {
@@ -53,12 +54,47 @@ void test_a_STOP_message_is_sent_to_the_motor_when_robocaddie_status_is_STOP() {
       stop_msg.data(), uart.getLastSentMessage().data(), stop_msg.size());
 }
 
+void test_robocaddie_sends_a_transmission_every_30_ms() {
+  SpyUART uart;
+  FakeTimeService timeService;
+  RoboCaddie robocaddie(uart);
+
+  timeService.setCurrentTime(25);
+  timeService.setStartTime(0);
+
+  robocaddie.transmission();
+
+  TEST_ASSERT_EQUAL_UINT64(0, uart.getNumbersOfExecutions());
+
+  timeService.setCurrentTime(30);
+  timeService.setStartTime(0);
+
+  robocaddie.transmission();
+
+  TEST_ASSERT_EQUAL_UINT64(1, uart.getNumbersOfExecutions());
+
+  timeService.setCurrentTime(45);
+  timeService.setStartTime(31);
+
+  robocaddie.transmission();
+
+  TEST_ASSERT_EQUAL_UINT64(1, uart.getNumbersOfExecutions());
+
+  timeService.setCurrentTime(62);
+  timeService.setStartTime(31);
+
+  robocaddie.transmission();
+
+  TEST_ASSERT_EQUAL_UINT64(2, uart.getNumbersOfExecutions());
+}
+
 int main(int argc, char **argv) {
   UNITY_BEGIN();
 
   RUN_TEST(test_robocaddie_is_stopped_on_startup);
   RUN_TEST(
       test_a_STOP_message_is_sent_to_the_motor_when_robocaddie_status_is_STOP);
+  RUN_TEST(test_robocaddie_sends_a_transmission_every_30_ms);
 
   UNITY_END();
 }
