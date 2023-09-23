@@ -64,28 +64,28 @@ void test_robocaddie_sends_a_transmission_every_30_ms() {
   time.setCurrentTime(25);
   time.setStartTime(0);
 
-  robocaddie.transmission();
+  robocaddie.run();
 
   TEST_ASSERT_EQUAL_UINT64(0, uart.getNumbersOfExecutions());
 
   time.setCurrentTime(30);
   time.setStartTime(0);
 
-  robocaddie.transmission();
+  robocaddie.run();
 
   TEST_ASSERT_EQUAL_UINT64(1, uart.getNumbersOfExecutions());
 
   time.setCurrentTime(45);
   time.setStartTime(31);
 
-  robocaddie.transmission();
+  robocaddie.run();
 
   TEST_ASSERT_EQUAL_UINT64(1, uart.getNumbersOfExecutions());
 
   time.setCurrentTime(62);
   time.setStartTime(31);
 
-  robocaddie.transmission();
+  robocaddie.run();
 
   TEST_ASSERT_EQUAL_UINT64(2, uart.getNumbersOfExecutions());
 }

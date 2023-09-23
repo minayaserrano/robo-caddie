@@ -16,6 +16,7 @@ public:
   ~RoboCaddie();
   const int getStatus();
   void transmission();
+  void run();
 };
 
 #endif
