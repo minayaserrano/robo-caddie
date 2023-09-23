@@ -14,6 +14,7 @@ public:
 class SpyUART : public UART {
 private:
   std::vector<uint8_t> lastSentMessage;
+  uint64_t numberOfExecutions = 0;
   const int MAX_UART_MESSAGE_LENGTH = 258;
 
 public:
@@ -24,11 +25,12 @@ public:
 
   const int transmit(const uint8_t *message, int length) {
     lastSentMessage.assign(message, message + length);
+    numberOfExecutions = numberOfExecutions + 1;
     return length;
   }
 
   std::vector<uint8_t> getLastSentMessage() { return lastSentMessage; }
-  uint8_t getNumbersOfExecutions() { return 0; }
+  uint8_t getNumbersOfExecutions() { return numberOfExecutions; }
 };
 
 #endif

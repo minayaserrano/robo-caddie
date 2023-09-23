@@ -6,7 +6,8 @@
 
 void test_robocaddie_is_stopped_on_startup() {
   SpyUART uart;
-  RoboCaddie robocaddie(uart);
+  FakeTimeService time;
+  RoboCaddie robocaddie(uart, time);
 
   TEST_ASSERT_EQUAL(RoboCaddie::STOP, robocaddie.getStatus());
 }
@@ -43,7 +44,8 @@ void test_a_STOP_message_is_sent_to_the_motor_when_robocaddie_status_is_STOP() {
       PROTOCOL_MSG2_LEFT_WHEEL4,  PROTOCOL_MSG2_CS};
 
   SpyUART uart;
-  RoboCaddie robocaddie(uart);
+  FakeTimeService time;
+  RoboCaddie robocaddie(uart, time);
 
   // Precondition: no message sent yet on initialization
   TEST_ASSERT_NULL(uart.getLastSentMessage().data());
@@ -56,32 +58,32 @@ void test_a_STOP_message_is_sent_to_the_motor_when_robocaddie_status_is_STOP() {
 
 void test_robocaddie_sends_a_transmission_every_30_ms() {
   SpyUART uart;
-  FakeTimeService timeService;
-  RoboCaddie robocaddie(uart);
+  FakeTimeService time;
+  RoboCaddie robocaddie(uart, time);
 
-  timeService.setCurrentTime(25);
-  timeService.setStartTime(0);
+  time.setCurrentTime(25);
+  time.setStartTime(0);
 
   robocaddie.transmission();
 
   TEST_ASSERT_EQUAL_UINT64(0, uart.getNumbersOfExecutions());
 
-  timeService.setCurrentTime(30);
-  timeService.setStartTime(0);
+  time.setCurrentTime(30);
+  time.setStartTime(0);
 
   robocaddie.transmission();
 
   TEST_ASSERT_EQUAL_UINT64(1, uart.getNumbersOfExecutions());
 
-  timeService.setCurrentTime(45);
-  timeService.setStartTime(31);
+  time.setCurrentTime(45);
+  time.setStartTime(31);
 
   robocaddie.transmission();
 
   TEST_ASSERT_EQUAL_UINT64(1, uart.getNumbersOfExecutions());
 
-  timeService.setCurrentTime(62);
-  timeService.setStartTime(31);
+  time.setCurrentTime(62);
+  time.setStartTime(31);
 
   robocaddie.transmission();
 
