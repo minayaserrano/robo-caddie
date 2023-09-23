@@ -7,7 +7,7 @@ class TimeService {
 public:
   TimeService() {}
   ~TimeService() {}
-  virtual bool isTick(uint8_t milliseconds) = 0;
+  virtual bool isTick(const uint8_t milliseconds) = 0;
 };
 
 class FakeTimeService : public TimeService {
@@ -22,7 +22,7 @@ public:
 
   void setStartTime(uint64_t time) { startTime = time; }
 
-  bool isTick(uint8_t milliseconds) {
+  bool isTick(const uint8_t milliseconds) {
     return (currentTime - startTime) >= milliseconds;
   }
 };

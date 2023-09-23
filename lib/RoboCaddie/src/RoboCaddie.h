@@ -8,6 +8,7 @@ class RoboCaddie {
 private:
   UART &uart;
   TimeService &time;
+  const uint8_t TRANSMISSION_TICKER_INTERVAL_IN_MILLISECONDS = 30;
 
 public:
   static const int STOP = 0;

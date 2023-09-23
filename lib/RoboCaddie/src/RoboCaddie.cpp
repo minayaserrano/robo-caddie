@@ -14,7 +14,7 @@ void RoboCaddie::transmission() {
 }
 
 void RoboCaddie::run() {
-  if (time.isTick(30)) {
+  if (time.isTick(TRANSMISSION_TICKER_INTERVAL_IN_MILLISECONDS)) {
     transmission();
   }
 }
