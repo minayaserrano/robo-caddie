@@ -1,11 +1,13 @@
 #ifdef UNIT_TEST
 
 #include <RoboCaddie.h>
+#include <TimeService.h>
 #include <unity.h>
 
 void test_robocaddie_is_stopped_on_startup() {
   SpyUART uart;
-  RoboCaddie robocaddie(uart);
+  FakeTimeService time;
+  RoboCaddie robocaddie(uart, time);
 
   TEST_ASSERT_EQUAL(RoboCaddie::STOP, robocaddie.getStatus());
 }
@@ -42,7 +44,8 @@ void test_a_STOP_message_is_sent_to_the_motor_when_robocaddie_status_is_STOP() {
       PROTOCOL_MSG2_LEFT_WHEEL4,  PROTOCOL_MSG2_CS};
 
   SpyUART uart;
-  RoboCaddie robocaddie(uart);
+  FakeTimeService time;
+  RoboCaddie robocaddie(uart, time);
 
   // Precondition: no message sent yet on initialization
   TEST_ASSERT_NULL(uart.getLastSentMessage().data());
@@ -53,12 +56,47 @@ void test_a_STOP_message_is_sent_to_the_motor_when_robocaddie_status_is_STOP() {
       stop_msg.data(), uart.getLastSentMessage().data(), stop_msg.size());
 }
 
+void test_robocaddie_sends_a_transmission_every_30_ms() {
+  SpyUART uart;
+  FakeTimeService time;
+  RoboCaddie robocaddie(uart, time);
+
+  time.setCurrentTime(25);
+  time.setStartTime(0);
+
+  robocaddie.run();
+
+  TEST_ASSERT_EQUAL_UINT64(0, uart.getNumbersOfExecutions());
+
+  time.setCurrentTime(30);
+  time.setStartTime(0);
+
+  robocaddie.run();
+
+  TEST_ASSERT_EQUAL_UINT64(1, uart.getNumbersOfExecutions());
+
+  time.setCurrentTime(45);
+  time.setStartTime(31);
+
+  robocaddie.run();
+
+  TEST_ASSERT_EQUAL_UINT64(1, uart.getNumbersOfExecutions());
+
+  time.setCurrentTime(62);
+  time.setStartTime(31);
+
+  robocaddie.run();
+
+  TEST_ASSERT_EQUAL_UINT64(2, uart.getNumbersOfExecutions());
+}
+
 int main(int argc, char **argv) {
   UNITY_BEGIN();
 
   RUN_TEST(test_robocaddie_is_stopped_on_startup);
   RUN_TEST(
       test_a_STOP_message_is_sent_to_the_motor_when_robocaddie_status_is_STOP);
+  RUN_TEST(test_robocaddie_sends_a_transmission_every_30_ms);
 
   UNITY_END();
 }
