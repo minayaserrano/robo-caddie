@@ -10,7 +10,7 @@ class UART {
 public:
   UART() {}
   ~UART() {}
-  virtual const int transmit(const uint8_t *message, int length) = 0;
+  virtual int transmit(const uint8_t *message, int length) = 0;
 };
 
 } // namespace RoboCaddieUART
@@ -27,7 +27,7 @@ public:
     lastSentMessage = {};
   }
 
-  const int transmit(const uint8_t *message, int length) {
+  int transmit(const uint8_t *message, int length) {
     lastSentMessage.assign(message, message + length);
     numberOfExecutions = numberOfExecutions + 1;
     return length;

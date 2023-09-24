@@ -15,7 +15,7 @@ public:
 
   RoboCaddie(RoboCaddieUART::UART &, TimeService &);
   ~RoboCaddie();
-  const int getStatus();
+  int getStatus();
   void transmission();
   void run();
 };
