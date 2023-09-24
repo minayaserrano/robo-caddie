@@ -5,6 +5,8 @@
 #include <TimeService.h>
 #include <unity.h>
 
+REDIRECT_STDOUT_TO(Serial);
+
 void test_robocaddie_is_stopped_on_startup() {
   SpyUART uart;
   FakeTimeService time;
