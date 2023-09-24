@@ -1,5 +1,7 @@
 #include "RoboCaddie.h"
 
+using namespace RoboCaddieUART;
+
 RoboCaddie::RoboCaddie(UART &uart, TimeService &time)
     : uart(uart), time(time) {}
 

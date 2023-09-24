@@ -4,6 +4,8 @@
 #include <stdint.h>
 #include <vector>
 
+namespace RoboCaddieUART {
+
 class UART {
 public:
   UART() {}
@@ -11,14 +13,16 @@ public:
   virtual const int transmit(const uint8_t *message, int length) = 0;
 };
 
-class SpyUART : public UART {
+} // namespace RoboCaddieUART
+
+class SpyUART : public RoboCaddieUART::UART {
 private:
   std::vector<uint8_t> lastSentMessage;
   uint64_t numberOfExecutions = 0;
   const int MAX_UART_MESSAGE_LENGTH = 258;
 
 public:
-  SpyUART() : UART() {
+  SpyUART() : RoboCaddieUART::UART() {
     lastSentMessage.reserve(MAX_UART_MESSAGE_LENGTH);
     lastSentMessage = {};
   }
