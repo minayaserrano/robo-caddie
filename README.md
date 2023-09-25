@@ -1,6 +1,7 @@
 # RoboCaddie
 
-[![CI](https://github.com/minayaserrano/robo-caddie/actions/workflows/ci.yml/badge.svg)](https://github.com/minayaserrano/robo-caddie/actions/workflows/ci.yml)
+[![CI-native](https://github.com/minayaserrano/robo-caddie/actions/workflows/ci-native.yml/badge.svg)](https://github.com/minayaserrano/robo-caddie/actions/workflows/ci-native.yml)
+[![CI-Arduino-Nano-33-BLE](https://github.com/minayaserrano/robo-caddie/actions/workflows/ci-arduino-nano-33-ble.yml/badge.svg)](https://github.com/minayaserrano/robo-caddie/actions/workflows/ci-arduino-nano-33-ble.yml)
 
 A hoverboard-powered golf trolley.
 
