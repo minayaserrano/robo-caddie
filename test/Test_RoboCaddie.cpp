@@ -1,6 +1,8 @@
 #ifdef UNIT_TEST
 
+#ifdef ARDUINO_ARCH_MBED
 #include <Arduino.h>
+#endif
 #include <RoboCaddie.h>
 #include <TimeService.h>
 #include <unity.h>
@@ -99,6 +101,23 @@ void test_robocaddie_sends_a_transmission_every_30_ms() {
   TEST_ASSERT_EQUAL_UINT64(2, uart.getNumbersOfExecutions());
 }
 
+#ifndef ARDUINO_ARCH_MBED
+
+int main(int argc, char **argv) {
+  UNITY_BEGIN();
+
+  RUN_TEST(test_robocaddie_is_stopped_on_startup);
+  RUN_TEST(
+      test_a_STOP_message_is_sent_to_the_motor_when_robocaddie_status_is_STOP);
+  RUN_TEST(test_robocaddie_sends_a_transmission_every_30_ms);
+
+  UNITY_END();
+}
+
+#endif
+
+#ifdef ARDUINO_ARCH_MBED
+
 void setup() {
   delay(2000);
 
@@ -113,5 +132,7 @@ void setup() {
 }
 
 void loop() { delay(1000); }
+
+#endif
 
 #endif
