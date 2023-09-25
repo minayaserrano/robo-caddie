@@ -5,7 +5,13 @@
 #include <TimeService.h>
 #include <unity.h>
 
+// Fix arduino/ArduinoCore-mbed issue:
+// https://github.com/platformio/platformio-core/issues/3980#issuecomment-1500895461
+#ifdef ARDUINO_ARCH_MBED
+#ifndef RENODE_ENVIRONMENT
 REDIRECT_STDOUT_TO(Serial);
+#endif
+#endif
 
 void test_robocaddie_is_stopped_on_startup() {
   SpyUART uart;
