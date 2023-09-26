@@ -10,6 +10,7 @@ class UART {
 public:
   UART() {}
   ~UART() {}
+  virtual void init(void) = 0;
   virtual int transmit(const uint8_t *message, int length) = 0;
 };
 
@@ -19,6 +20,7 @@ class SpyUART : public RoboCaddieUART::UART {
 private:
   std::vector<uint8_t> lastSentMessage;
   uint64_t numberOfExecutions = 0;
+  uint64_t baudRate = 0;
   const int MAX_UART_MESSAGE_LENGTH = 258;
 
 public:
@@ -26,6 +28,8 @@ public:
     lastSentMessage.reserve(MAX_UART_MESSAGE_LENGTH);
     lastSentMessage = {};
   }
+
+  void init() { baudRate = 115200; }
 
   int transmit(const uint8_t *message, int length) {
     lastSentMessage.assign(message, message + length);
@@ -35,7 +39,7 @@ public:
 
   std::vector<uint8_t> getLastSentMessage() { return lastSentMessage; }
   uint8_t getNumbersOfExecutions() { return numberOfExecutions; }
-  uint64_t getBaudRate() { return 0; }
+  uint64_t getBaudRate() { return baudRate; }
 };
 
 #endif
