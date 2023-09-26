@@ -1,19 +1,21 @@
 #ifdef UNIT_TEST
 
-#ifdef ARDUINO_ARCH_MBED
-#include <Arduino.h>
-#endif
-#include <RoboCaddie.h>
-#include <TimeService.h>
-#include <unity.h>
+void test_robocaddie_is_stopped_on_startup();
+void test_a_STOP_message_is_sent_to_the_motor_when_robocaddie_status_is_STOP();
+void test_robocaddie_sends_a_transmission_every_30_ms();
+void test_uart_baud_rate_should_be_115200();
 
-// Fix arduino/ArduinoCore-mbed issue:
-// https://github.com/platformio/platformio-core/issues/3980#issuecomment-1500895461
-#ifdef ARDUINO_ARCH_MBED
-#ifndef RENODE_ENVIRONMENT
-REDIRECT_STDOUT_TO(Serial);
-#endif
-#endif
+int run_tests() {
+  UNITY_BEGIN();
+
+  RUN_TEST(test_robocaddie_is_stopped_on_startup);
+  RUN_TEST(
+      test_a_STOP_message_is_sent_to_the_motor_when_robocaddie_status_is_STOP);
+  RUN_TEST(test_robocaddie_sends_a_transmission_every_30_ms);
+  RUN_TEST(test_uart_baud_rate_should_be_115200);
+
+  return UNITY_END();
+}
 
 void test_robocaddie_is_stopped_on_startup() {
   SpyUART uart;
@@ -112,41 +114,5 @@ void test_uart_baud_rate_should_be_115200() {
 
   TEST_ASSERT_EQUAL_UINT64(115200, uart.getBaudRate());
 }
-
-#ifndef ARDUINO_ARCH_MBED
-
-int main(int argc, char **argv) {
-  UNITY_BEGIN();
-
-  RUN_TEST(test_robocaddie_is_stopped_on_startup);
-  RUN_TEST(
-      test_a_STOP_message_is_sent_to_the_motor_when_robocaddie_status_is_STOP);
-  RUN_TEST(test_robocaddie_sends_a_transmission_every_30_ms);
-  RUN_TEST(test_uart_baud_rate_should_be_115200);
-
-  UNITY_END();
-}
-
-#endif
-
-#ifdef ARDUINO_ARCH_MBED
-
-void setup() {
-  delay(2000);
-
-  UNITY_BEGIN();
-
-  RUN_TEST(test_robocaddie_is_stopped_on_startup);
-  RUN_TEST(
-      test_a_STOP_message_is_sent_to_the_motor_when_robocaddie_status_is_STOP);
-  RUN_TEST(test_robocaddie_sends_a_transmission_every_30_ms);
-  RUN_TEST(test_uart_baud_rate_should_be_115200);
-
-  UNITY_END();
-}
-
-void loop() { delay(1000); }
-
-#endif
 
 #endif
