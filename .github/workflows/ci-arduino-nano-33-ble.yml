@@ -1,6 +1,6 @@
 name: CI-Arduino-Nano-33-BLE
 
-on: [push, pull_request]
+on: [push]
 
 jobs:
   test:
