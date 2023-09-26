@@ -101,6 +101,18 @@ void test_robocaddie_sends_a_transmission_every_30_ms() {
   TEST_ASSERT_EQUAL_UINT64(2, uart.getNumbersOfExecutions());
 }
 
+void test_uart_baud_rate_should_be_115200() {
+  SpyUART uart;
+  FakeTimeService time;
+  RoboCaddie robocaddie(uart, time);
+
+  TEST_ASSERT_EQUAL_UINT64(0, uart.getBaudRate());
+
+  robocaddie.init();
+
+  TEST_ASSERT_EQUAL_UINT64(115200, uart.getBaudRate());
+}
+
 #ifndef ARDUINO_ARCH_MBED
 
 int main(int argc, char **argv) {
@@ -110,6 +122,7 @@ int main(int argc, char **argv) {
   RUN_TEST(
       test_a_STOP_message_is_sent_to_the_motor_when_robocaddie_status_is_STOP);
   RUN_TEST(test_robocaddie_sends_a_transmission_every_30_ms);
+  RUN_TEST(test_uart_baud_rate_should_be_115200);
 
   UNITY_END();
 }
@@ -127,6 +140,7 @@ void setup() {
   RUN_TEST(
       test_a_STOP_message_is_sent_to_the_motor_when_robocaddie_status_is_STOP);
   RUN_TEST(test_robocaddie_sends_a_transmission_every_30_ms);
+  RUN_TEST(test_uart_baud_rate_should_be_115200);
 
   UNITY_END();
 }

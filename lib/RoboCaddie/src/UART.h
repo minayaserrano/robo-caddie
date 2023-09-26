@@ -35,6 +35,7 @@ public:
 
   std::vector<uint8_t> getLastSentMessage() { return lastSentMessage; }
   uint8_t getNumbersOfExecutions() { return numberOfExecutions; }
+  uint64_t getBaudRate() { return 0; }
 };
 
 #endif
