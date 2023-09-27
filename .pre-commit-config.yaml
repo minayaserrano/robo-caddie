@@ -1,8 +1,11 @@
+default_install_hook_types: [pre-push]
+default_stages: [pre-push]
+repos:
 -   repo: local
     hooks:
     -   id: pio-test
         name: pio-test
-        entry: pio test -e native
+        entry: pio test -e native -e nano33ble-renode --without-uploading
         pass_filenames: false
         language: system
-        stages: [push]
+        stages: [pre-push]
