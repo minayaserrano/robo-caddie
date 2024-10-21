@@ -2,6 +2,8 @@
 
 using namespace RoboCaddieUART;
 
+const int RoboCaddie::STOP;
+
 RoboCaddie::RoboCaddie(UART &uart, TimeService &time)
     : uart(uart), time(time) {}
 
