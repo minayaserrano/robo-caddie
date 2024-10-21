@@ -1,0 +1,9 @@
+[tool.poetry]
+package-mode = false
+name = "robo-caddie"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+
+[tool.poetry.group.dev.dependencies]
+pre-commit = "^4.0.1"
