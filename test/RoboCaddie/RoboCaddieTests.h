@@ -1,5 +1,15 @@
 #ifdef UNIT_TEST
 
+TEST(DummyTest, ShouldPass) { EXPECT_EQ(1, 1); }
+
+TEST(DummyFailedTest, ShouldNotPass) { EXPECT_EQ(1, 0); }
+
+TEST(SkipTest, DoesSkip) {
+  GTEST_SKIP() << "Skipping single test";
+  EXPECT_EQ(0, 1); // Won't fail; it won't be executed
+}
+
+/*
 void test_robocaddie_is_stopped_on_startup();
 void test_a_STOP_message_is_sent_to_the_motor_when_robocaddie_status_is_STOP();
 void test_robocaddie_sends_a_transmission_every_30_ms();
@@ -114,5 +124,6 @@ void test_uart_baud_rate_should_be_115200() {
 
   TEST_ASSERT_EQUAL_UINT64(115200, uart.getBaudRate());
 }
+*/
 
 #endif

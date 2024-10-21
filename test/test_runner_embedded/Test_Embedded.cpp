@@ -2,7 +2,7 @@
 
 #include <Arduino.h>
 #include <RoboCaddie.h>
-#include <unity.h>
+#include <gtest/gtest.h>
 
 #include "RoboCaddie/RoboCaddieTests.h"
 
@@ -15,7 +15,12 @@ REDIRECT_STDOUT_TO(Serial);
 void setup() {
   delay(2000);
 
-  run_tests();
+  Serial.begin(115200);
+
+  ::testing::InitGoogleTest();
+
+  if (RUN_ALL_TESTS()) {
+  };
 }
 
 void loop() { delay(1000); }
