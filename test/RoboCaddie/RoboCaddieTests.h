@@ -103,7 +103,7 @@ TEST_F(RoboCaddieFixture, RoboCaddieSendsATransmissionEveryTick) {
   }
 }
 
-TEST_F(RoboCaddieFixture, UARTBaudRateShouldBe115200) {
+TEST_F(RoboCaddieFixture, UARTInitializedOnRoboCaddieInitialization) {
   EXPECT_CALL(uart, init()).Times(1);
 
   robocaddie.init();
