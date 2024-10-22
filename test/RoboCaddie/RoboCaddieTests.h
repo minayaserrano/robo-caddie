@@ -1,6 +1,7 @@
 #ifdef UNIT_TEST
 
 using ::testing::_;
+using ::testing::Return;
 
 class MockUART : public RoboCaddieUART::UART {
 public:
@@ -9,10 +10,15 @@ public:
               (override));
 };
 
+class MockTimeService : public TimeService {
+public:
+  MOCK_METHOD(bool, isTick, (const uint8_t milliseconds), (override));
+};
+
 class RoboCaddieFixture : public ::testing::Test {
 protected:
   MockUART uart;
-  FakeTimeService time;
+  MockTimeService time;
   RoboCaddie robocaddie;
 
   RoboCaddieFixture() : robocaddie(uart, time) {}
@@ -61,8 +67,7 @@ TEST_F(RoboCaddieFixture,
 
 TEST_F(RoboCaddieFixture,
        RoboCaddieDoesNotSendTransmissionIfIntervalIsShorterThan30Ms) {
-  time.setCurrentTime(25);
-  time.setStartTime(0);
+  EXPECT_CALL(time, isTick(30)).WillOnce(Return(false));
 
   EXPECT_CALL(uart, transmit(_, _)).Times(0);
 
@@ -71,25 +76,30 @@ TEST_F(RoboCaddieFixture,
 
 TEST_F(RoboCaddieFixture,
        RoboCaddieSendsATransmissionIfIntervalIsLargerThan30Ms) {
-  time.setCurrentTime(30);
-  time.setStartTime(0);
+  EXPECT_CALL(time, isTick(30)).WillOnce(Return(true));
 
   EXPECT_CALL(uart, transmit(_, _)).Times(1);
 
   robocaddie.run();
 }
 
-TEST_F(RoboCaddieFixture, RoboCaddieSendsATransmissionEvery30Ms) {
+TEST_F(RoboCaddieFixture, RoboCaddieSendsATransmissionEveryTick) {
+  EXPECT_CALL(time, isTick(30))
+      .WillOnce(Return(false))
+      .WillOnce(Return(true))
+      .WillOnce(Return(false))
+      .WillOnce(Return(false))
+      .WillOnce(Return(false))
+      .WillOnce(Return(true))
+      .WillOnce(Return(false))
+      .WillOnce(Return(true))
+      .WillOnce(Return(false))
+      .WillOnce(Return(false));
+
   EXPECT_CALL(uart, transmit(_, _)).Times(3);
 
-  time.setCurrentTime(0);
-  time.setStartTime(0);
-
-  uint8_t time_elapsed = 0;
-  while (time_elapsed <= 119) {
-    time.setCurrentTime(time_elapsed);
+  for (uint8_t counter = 0; counter < 10; ++counter) {
     robocaddie.run();
-    time_elapsed += 1;
   }
 }
 

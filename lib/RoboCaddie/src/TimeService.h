@@ -10,25 +10,4 @@ public:
   virtual bool isTick(const uint8_t milliseconds) = 0;
 };
 
-class FakeTimeService : public TimeService {
-private:
-  uint64_t currentTime;
-  uint64_t startTime;
-
-public:
-  FakeTimeService() : TimeService() {}
-
-  void setCurrentTime(uint64_t time) { currentTime = time; }
-
-  void setStartTime(uint64_t time) { startTime = time; }
-
-  bool isTick(const uint8_t milliseconds) {
-    if ((currentTime - startTime) < milliseconds) {
-      return false;
-    }
-    setStartTime(currentTime);
-    return true;
-  }
-};
-
 #endif
