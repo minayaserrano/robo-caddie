@@ -1,14 +1,20 @@
 #ifdef UNIT_TEST
 
-TEST(RoboCaddieTest, RoboCaddieIsStoppedOnStartup) {
+class RoboCaddieFixture : public ::testing::Test {
+protected:
   SpyUART uart;
   FakeTimeService time;
-  RoboCaddie robocaddie(uart, time);
+  RoboCaddie robocaddie;
 
+  RoboCaddieFixture() : robocaddie(uart, time) {}
+};
+
+TEST_F(RoboCaddieFixture, RoboCaddieIsStoppedOnStartup) {
   EXPECT_EQ(RoboCaddie::STOP, robocaddie.getStatus());
 }
 
-TEST(RoboCaddieTest, AStopMessageIsSentToTheMotorWhenRoboCaddieStatusIsSTOP) {
+TEST_F(RoboCaddieFixture,
+       AStopMessageIsSentToTheMotorWhenRoboCaddieStatusIsSTOP) {
   const uint8_t PROTOCOL_MSG2_SOM = 0x04;  // PROTOCOL_SOM_NOACK
   const uint8_t PROTOCOL_MSG2_CI = 0x01;   // Continuity Counter
   const uint8_t PROTOCOL_MSG2_LEN = 0x0A;  // Len of bytes to follow,
@@ -39,10 +45,6 @@ TEST(RoboCaddieTest, AStopMessageIsSentToTheMotorWhenRoboCaddieStatusIsSTOP) {
       PROTOCOL_MSG2_LEFT_WHEEL2,  PROTOCOL_MSG2_LEFT_WHEEL3,
       PROTOCOL_MSG2_LEFT_WHEEL4,  PROTOCOL_MSG2_CS};
 
-  SpyUART uart;
-  FakeTimeService time;
-  RoboCaddie robocaddie(uart, time);
-
   // Precondition: no message sent yet on initialization
   EXPECT_EQ(uart.getLastSentMessage().data(), nullptr);
 
@@ -54,11 +56,7 @@ TEST(RoboCaddieTest, AStopMessageIsSentToTheMotorWhenRoboCaddieStatusIsSTOP) {
               testing::ElementsAreArray(stop_msg));
 }
 
-TEST(RoboCaddieTest, RoboCaddieSendsATransmissionEvery30Ms) {
-  SpyUART uart;
-  FakeTimeService time;
-  RoboCaddie robocaddie(uart, time);
-
+TEST_F(RoboCaddieFixture, RoboCaddieSendsATransmissionEvery30Ms) {
   time.setCurrentTime(25);
   time.setStartTime(0);
 
@@ -88,11 +86,7 @@ TEST(RoboCaddieTest, RoboCaddieSendsATransmissionEvery30Ms) {
   EXPECT_EQ(2, uart.getNumbersOfExecutions());
 }
 
-TEST(RoboCaddieTest, UARTBaudRateShouldBe115200) {
-  SpyUART uart;
-  FakeTimeService time;
-  RoboCaddie robocaddie(uart, time);
-
+TEST_F(RoboCaddieFixture, UARTBaudRateShouldBe115200) {
   EXPECT_EQ(0, uart.getBaudRate());
 
   robocaddie.init();
