@@ -23,7 +23,11 @@ public:
   void setStartTime(uint64_t time) { startTime = time; }
 
   bool isTick(const uint8_t milliseconds) {
-    return (currentTime - startTime) >= milliseconds;
+    if ((currentTime - startTime) < milliseconds) {
+      return false;
+    }
+    setStartTime(currentTime);
+    return true;
   }
 };
 

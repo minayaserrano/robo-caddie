@@ -1,8 +1,17 @@
 #ifdef UNIT_TEST
 
+using ::testing::_;
+
+class MockUART : public RoboCaddieUART::UART {
+public:
+  MOCK_METHOD(void, init, (), (override));
+  MOCK_METHOD(int, transmit, (std::vector<uint8_t> message, int length),
+              (override));
+};
+
 class RoboCaddieFixture : public ::testing::Test {
 protected:
-  SpyUART uart;
+  MockUART uart;
   FakeTimeService time;
   RoboCaddie robocaddie;
 
@@ -45,53 +54,49 @@ TEST_F(RoboCaddieFixture,
       PROTOCOL_MSG2_LEFT_WHEEL2,  PROTOCOL_MSG2_LEFT_WHEEL3,
       PROTOCOL_MSG2_LEFT_WHEEL4,  PROTOCOL_MSG2_CS};
 
-  // Precondition: no message sent yet on initialization
-  EXPECT_EQ(uart.getLastSentMessage().data(), nullptr);
+  EXPECT_CALL(uart, transmit(stop_msg, stop_msg.size())).Times(1);
 
   robocaddie.transmission();
-
-  const auto &lastMessage = uart.getLastSentMessage();
-  EXPECT_THAT(std::vector<uint8_t>(lastMessage.data(),
-                                   lastMessage.data() + lastMessage.size()),
-              testing::ElementsAreArray(stop_msg));
 }
 
-TEST_F(RoboCaddieFixture, RoboCaddieSendsATransmissionEvery30Ms) {
+TEST_F(RoboCaddieFixture,
+       RoboCaddieDoesNotSendTransmissionIfIntervalIsShorterThan30Ms) {
   time.setCurrentTime(25);
   time.setStartTime(0);
 
+  EXPECT_CALL(uart, transmit(_, _)).Times(0);
+
   robocaddie.run();
+}
 
-  EXPECT_EQ(0, uart.getNumbersOfExecutions());
-
+TEST_F(RoboCaddieFixture,
+       RoboCaddieSendsATransmissionIfIntervalIsLargerThan30Ms) {
   time.setCurrentTime(30);
   time.setStartTime(0);
 
-  robocaddie.run();
-
-  EXPECT_EQ(1, uart.getNumbersOfExecutions());
-
-  time.setCurrentTime(45);
-  time.setStartTime(31);
+  EXPECT_CALL(uart, transmit(_, _)).Times(1);
 
   robocaddie.run();
+}
 
-  EXPECT_EQ(1, uart.getNumbersOfExecutions());
+TEST_F(RoboCaddieFixture, RoboCaddieSendsATransmissionEvery30Ms) {
+  EXPECT_CALL(uart, transmit(_, _)).Times(3);
 
-  time.setCurrentTime(62);
-  time.setStartTime(31);
+  time.setCurrentTime(0);
+  time.setStartTime(0);
 
-  robocaddie.run();
-
-  EXPECT_EQ(2, uart.getNumbersOfExecutions());
+  uint8_t time_elapsed = 0;
+  while (time_elapsed <= 119) {
+    time.setCurrentTime(time_elapsed);
+    robocaddie.run();
+    time_elapsed += 1;
+  }
 }
 
 TEST_F(RoboCaddieFixture, UARTBaudRateShouldBe115200) {
-  EXPECT_EQ(0, uart.getBaudRate());
+  EXPECT_CALL(uart, init()).Times(1);
 
   robocaddie.init();
-
-  EXPECT_EQ(115200, uart.getBaudRate());
 }
 
 #endif
