@@ -7,24 +7,30 @@ class TimeService {
 public:
   TimeService() {}
   ~TimeService() {}
-  virtual bool isTick(const uint8_t milliseconds) = 0;
+  virtual bool isTick(const uint16_t milliseconds) = 0;
 };
 
-class FakeTimeService : public TimeService {
+#ifdef ARDUINO
+
+#include <Arduino.h>
+
+class ArduinoTimeService : public TimeService {
 private:
-  uint64_t currentTime;
-  uint64_t startTime;
+  unsigned long lastTickTime;
 
 public:
-  FakeTimeService() : TimeService() {}
+  ArduinoTimeService() : lastTickTime(millis()) {}
 
-  void setCurrentTime(uint64_t time) { currentTime = time; }
-
-  void setStartTime(uint64_t time) { startTime = time; }
-
-  bool isTick(const uint8_t milliseconds) {
-    return (currentTime - startTime) >= milliseconds;
+  bool isTick(const uint16_t milliseconds) override {
+    unsigned long currentTime = millis();
+    if (currentTime - lastTickTime >= milliseconds) {
+      lastTickTime = currentTime;
+      return true;
+    }
+    return false;
   }
 };
+
+#endif
 
 #endif

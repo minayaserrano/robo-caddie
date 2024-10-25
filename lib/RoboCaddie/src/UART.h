@@ -9,37 +9,28 @@ namespace RoboCaddieUART {
 class UART {
 public:
   UART() {}
-  ~UART() {}
+  virtual ~UART() {}
   virtual void init(void) = 0;
-  virtual int transmit(const uint8_t *message, int length) = 0;
+  virtual int transmit(std::vector<uint8_t> message) = 0;
 };
 
 } // namespace RoboCaddieUART
 
-class SpyUART : public RoboCaddieUART::UART {
-private:
-  std::vector<uint8_t> lastSentMessage;
-  uint64_t numberOfExecutions = 0;
-  uint64_t baudRate = 0;
-  const int MAX_UART_MESSAGE_LENGTH = 258;
+#ifdef ARDUINO
 
+#include <Arduino.h>
+
+class ArduinoSerial1UART : public RoboCaddieUART::UART {
 public:
-  SpyUART() : RoboCaddieUART::UART() {
-    lastSentMessage.reserve(MAX_UART_MESSAGE_LENGTH);
-    lastSentMessage = {};
+  ArduinoSerial1UART() : RoboCaddieUART::UART() {}
+
+  void init(void) { Serial1.begin(115200); }
+
+  int transmit(std::vector<uint8_t> message) {
+    return Serial1.write(message.data(), message.size());
   }
-
-  void init() { baudRate = 115200; }
-
-  int transmit(const uint8_t *message, int length) {
-    lastSentMessage.assign(message, message + length);
-    numberOfExecutions = numberOfExecutions + 1;
-    return length;
-  }
-
-  std::vector<uint8_t> getLastSentMessage() { return lastSentMessage; }
-  uint8_t getNumbersOfExecutions() { return numberOfExecutions; }
-  uint64_t getBaudRate() { return baudRate; }
 };
+
+#endif
 
 #endif

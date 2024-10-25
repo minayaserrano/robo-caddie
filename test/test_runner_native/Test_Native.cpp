@@ -1,9 +1,9 @@
 #ifdef UNIT_TEST
 
-#include <RoboCaddie.h>
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
+#include "RoboCaddie.h"
 #include "RoboCaddie/RoboCaddieTests.h"
 
 int main(int argc, char **argv) {

@@ -1,14 +1,34 @@
 #ifdef UNIT_TEST
 
-TEST(RoboCaddieTest, RoboCaddieIsStoppedOnStartup) {
-  SpyUART uart;
-  FakeTimeService time;
-  RoboCaddie robocaddie(uart, time);
+using ::testing::_;
+using ::testing::Return;
 
+class MockUART : public RoboCaddieUART::UART {
+public:
+  MOCK_METHOD(void, init, (), (override));
+  MOCK_METHOD(int, transmit, (std::vector<uint8_t> message), (override));
+};
+
+class MockTimeService : public TimeService {
+public:
+  MOCK_METHOD(bool, isTick, (const uint16_t milliseconds), (override));
+};
+
+class RoboCaddieFixture : public ::testing::Test {
+protected:
+  MockUART uart;
+  MockTimeService time;
+  RoboCaddie robocaddie;
+
+  RoboCaddieFixture() : robocaddie(uart, time) {}
+};
+
+TEST_F(RoboCaddieFixture, RoboCaddieIsStoppedOnStartup) {
   EXPECT_EQ(RoboCaddie::STOP, robocaddie.getStatus());
 }
 
-TEST(RoboCaddieTest, AStopMessageIsSentToTheMotorWhenRoboCaddieStatusIsSTOP) {
+TEST_F(RoboCaddieFixture,
+       AStopMessageIsSentToTheMotorWhenRoboCaddieStatusIsSTOP) {
   const uint8_t PROTOCOL_MSG2_SOM = 0x04;  // PROTOCOL_SOM_NOACK
   const uint8_t PROTOCOL_MSG2_CI = 0x01;   // Continuity Counter
   const uint8_t PROTOCOL_MSG2_LEN = 0x0A;  // Len of bytes to follow,
@@ -39,65 +59,53 @@ TEST(RoboCaddieTest, AStopMessageIsSentToTheMotorWhenRoboCaddieStatusIsSTOP) {
       PROTOCOL_MSG2_LEFT_WHEEL2,  PROTOCOL_MSG2_LEFT_WHEEL3,
       PROTOCOL_MSG2_LEFT_WHEEL4,  PROTOCOL_MSG2_CS};
 
-  SpyUART uart;
-  FakeTimeService time;
-  RoboCaddie robocaddie(uart, time);
-
-  // Precondition: no message sent yet on initialization
-  EXPECT_EQ(uart.getLastSentMessage().data(), nullptr);
+  EXPECT_CALL(uart, transmit(stop_msg)).Times(1);
 
   robocaddie.transmission();
-
-  const auto &lastMessage = uart.getLastSentMessage();
-  EXPECT_THAT(std::vector<uint8_t>(lastMessage.data(),
-                                   lastMessage.data() + lastMessage.size()),
-              testing::ElementsAreArray(stop_msg));
 }
 
-TEST(RoboCaddieTest, RoboCaddieSendsATransmissionEvery30Ms) {
-  SpyUART uart;
-  FakeTimeService time;
-  RoboCaddie robocaddie(uart, time);
+TEST_F(RoboCaddieFixture,
+       RoboCaddieDoesNotSendTransmissionIfIntervalIsShorterThan30Ms) {
+  EXPECT_CALL(time, isTick(30)).WillOnce(Return(false));
 
-  time.setCurrentTime(25);
-  time.setStartTime(0);
+  EXPECT_CALL(uart, transmit(_)).Times(0);
 
   robocaddie.run();
-
-  EXPECT_EQ(0, uart.getNumbersOfExecutions());
-
-  time.setCurrentTime(30);
-  time.setStartTime(0);
-
-  robocaddie.run();
-
-  EXPECT_EQ(1, uart.getNumbersOfExecutions());
-
-  time.setCurrentTime(45);
-  time.setStartTime(31);
-
-  robocaddie.run();
-
-  EXPECT_EQ(1, uart.getNumbersOfExecutions());
-
-  time.setCurrentTime(62);
-  time.setStartTime(31);
-
-  robocaddie.run();
-
-  EXPECT_EQ(2, uart.getNumbersOfExecutions());
 }
 
-TEST(RoboCaddieTest, UARTBaudRateShouldBe115200) {
-  SpyUART uart;
-  FakeTimeService time;
-  RoboCaddie robocaddie(uart, time);
+TEST_F(RoboCaddieFixture,
+       RoboCaddieSendsATransmissionIfIntervalIsLargerThan30Ms) {
+  EXPECT_CALL(time, isTick(30)).WillOnce(Return(true));
 
-  EXPECT_EQ(0, uart.getBaudRate());
+  EXPECT_CALL(uart, transmit(_)).Times(1);
+
+  robocaddie.run();
+}
+
+TEST_F(RoboCaddieFixture, RoboCaddieSendsATransmissionEveryTick) {
+  EXPECT_CALL(time, isTick(30))
+      .WillOnce(Return(false))
+      .WillOnce(Return(true))
+      .WillOnce(Return(false))
+      .WillOnce(Return(false))
+      .WillOnce(Return(false))
+      .WillOnce(Return(true))
+      .WillOnce(Return(false))
+      .WillOnce(Return(true))
+      .WillOnce(Return(false))
+      .WillOnce(Return(false));
+
+  EXPECT_CALL(uart, transmit(_)).Times(3);
+
+  for (uint8_t counter = 0; counter < 10; ++counter) {
+    robocaddie.run();
+  }
+}
+
+TEST_F(RoboCaddieFixture, UARTInitializedOnRoboCaddieInitialization) {
+  EXPECT_CALL(uart, init()).Times(1);
 
   robocaddie.init();
-
-  EXPECT_EQ(115200, uart.getBaudRate());
 }
 
 #endif
