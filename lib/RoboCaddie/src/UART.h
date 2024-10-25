@@ -11,7 +11,7 @@ public:
   UART() {}
   virtual ~UART() {}
   virtual void init(void) = 0;
-  virtual int transmit(std::vector<uint8_t> message, int length) = 0;
+  virtual int transmit(std::vector<uint8_t> message) = 0;
 };
 
 } // namespace RoboCaddieUART
@@ -26,7 +26,7 @@ public:
 
   void init(void) { Serial1.begin(115200); }
 
-  int transmit(std::vector<uint8_t> message, int length) {
+  int transmit(std::vector<uint8_t> message) {
     return Serial1.write(message.data(), message.size());
   }
 };

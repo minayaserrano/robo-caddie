@@ -7,7 +7,7 @@ TEST(UART, ArduinoSerial1UARTSendsInformation) {
 
   uart.init();
 
-  EXPECT_EQ(uart.transmit(message, message.size()), 3);
+  EXPECT_EQ(uart.transmit(message), 3);
 }
 
 #endif

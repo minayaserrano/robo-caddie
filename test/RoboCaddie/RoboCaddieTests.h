@@ -6,8 +6,7 @@ using ::testing::Return;
 class MockUART : public RoboCaddieUART::UART {
 public:
   MOCK_METHOD(void, init, (), (override));
-  MOCK_METHOD(int, transmit, (std::vector<uint8_t> message, int length),
-              (override));
+  MOCK_METHOD(int, transmit, (std::vector<uint8_t> message), (override));
 };
 
 class MockTimeService : public TimeService {
@@ -60,7 +59,7 @@ TEST_F(RoboCaddieFixture,
       PROTOCOL_MSG2_LEFT_WHEEL2,  PROTOCOL_MSG2_LEFT_WHEEL3,
       PROTOCOL_MSG2_LEFT_WHEEL4,  PROTOCOL_MSG2_CS};
 
-  EXPECT_CALL(uart, transmit(stop_msg, stop_msg.size())).Times(1);
+  EXPECT_CALL(uart, transmit(stop_msg)).Times(1);
 
   robocaddie.transmission();
 }
@@ -69,7 +68,7 @@ TEST_F(RoboCaddieFixture,
        RoboCaddieDoesNotSendTransmissionIfIntervalIsShorterThan30Ms) {
   EXPECT_CALL(time, isTick(30)).WillOnce(Return(false));
 
-  EXPECT_CALL(uart, transmit(_, _)).Times(0);
+  EXPECT_CALL(uart, transmit(_)).Times(0);
 
   robocaddie.run();
 }
@@ -78,7 +77,7 @@ TEST_F(RoboCaddieFixture,
        RoboCaddieSendsATransmissionIfIntervalIsLargerThan30Ms) {
   EXPECT_CALL(time, isTick(30)).WillOnce(Return(true));
 
-  EXPECT_CALL(uart, transmit(_, _)).Times(1);
+  EXPECT_CALL(uart, transmit(_)).Times(1);
 
   robocaddie.run();
 }
@@ -96,7 +95,7 @@ TEST_F(RoboCaddieFixture, RoboCaddieSendsATransmissionEveryTick) {
       .WillOnce(Return(false))
       .WillOnce(Return(false));
 
-  EXPECT_CALL(uart, transmit(_, _)).Times(3);
+  EXPECT_CALL(uart, transmit(_)).Times(3);
 
   for (uint8_t counter = 0; counter < 10; ++counter) {
     robocaddie.run();
