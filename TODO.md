@@ -8,7 +8,7 @@
     - Main loop
     - ~~Arduino UART implementation~~
       - ~~UART baud rate initialization~~
-    - Arduino TimeService implementation
+    - ~~Arduino TimeService implementation~~
     - Consecutive messages should increase CI (Continuity counter) and CS (CheckSum) values
 - RoboCaddie goes forward when it receives a forward command
 - RoboCaddie goes backward when it receives a backward command

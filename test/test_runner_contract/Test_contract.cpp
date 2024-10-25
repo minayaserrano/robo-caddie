@@ -2,8 +2,10 @@
 
 #include <gtest/gtest.h>
 
+#include "TimeService.h"
 #include "UART.h"
 #include "contract/ArduinoSerial1UARTTests.h"
+#include "contract/ArduinoTimeServiceTests.h"
 
 // Fix arduino/ArduinoCore-mbed issue:
 // https://github.com/platformio/platformio-core/issues/3980#issuecomment-1500895461

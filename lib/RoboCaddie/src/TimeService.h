@@ -7,7 +7,30 @@ class TimeService {
 public:
   TimeService() {}
   ~TimeService() {}
-  virtual bool isTick(const uint8_t milliseconds) = 0;
+  virtual bool isTick(const uint16_t milliseconds) = 0;
 };
+
+#ifdef ARDUINO
+
+#include <Arduino.h>
+
+class ArduinoTimeService : public TimeService {
+private:
+  unsigned long lastTickTime;
+
+public:
+  ArduinoTimeService() : lastTickTime(millis()) {}
+
+  bool isTick(const uint16_t milliseconds) override {
+    unsigned long currentTime = millis();
+    if (currentTime - lastTickTime >= milliseconds) {
+      lastTickTime = currentTime;
+      return true;
+    }
+    return false;
+  }
+};
+
+#endif
 
 #endif

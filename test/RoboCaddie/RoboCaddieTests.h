@@ -11,7 +11,7 @@ public:
 
 class MockTimeService : public TimeService {
 public:
-  MOCK_METHOD(bool, isTick, (const uint8_t milliseconds), (override));
+  MOCK_METHOD(bool, isTick, (const uint16_t milliseconds), (override));
 };
 
 class RoboCaddieFixture : public ::testing::Test {
