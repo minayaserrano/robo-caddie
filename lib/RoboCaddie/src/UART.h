@@ -1,6 +1,7 @@
 #ifndef __UART_H
 #define __UART_H
 
+#include <stdint.h>
 #include <vector>
 
 namespace RoboCaddieUART {

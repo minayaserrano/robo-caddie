@@ -1,7 +1,5 @@
 #ifdef UNIT_TEST
 
-#include <Arduino.h>
-#include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
 #include "UART.h"

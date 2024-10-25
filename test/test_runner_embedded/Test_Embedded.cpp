@@ -1,10 +1,9 @@
 #ifdef UNIT_TEST
 
-#include <Arduino.h>
-#include <RoboCaddie.h>
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
+#include "RoboCaddie.h"
 #include "RoboCaddie/RoboCaddieTests.h"
 
 // Fix arduino/ArduinoCore-mbed issue:
