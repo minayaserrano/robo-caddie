@@ -29,7 +29,13 @@ void RoboCaddie::setStatus(const int command) { status = command; }
 
 void RoboCaddie::init() { uart.init(); }
 
-void RoboCaddie::transmission() { hover.sendPWM(0, 0, PROTOCOL_SOM_NOACK); }
+void RoboCaddie::transmission() {
+  if (status == RoboCaddie::FORWARD) {
+    hover.sendPWM(100, 0, PROTOCOL_SOM_NOACK);
+  } else {
+    hover.sendPWM(0, 0, PROTOCOL_SOM_NOACK);
+  }
+}
 
 void RoboCaddie::run() {
   if (time.isTick(TRANSMISSION_TICKER_INTERVAL_IN_MILLISECONDS)) {

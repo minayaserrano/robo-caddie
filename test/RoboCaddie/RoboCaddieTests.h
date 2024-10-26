@@ -71,6 +71,18 @@ TEST_F(RoboCaddieFixture,
 }
 
 TEST_F(RoboCaddieFixture,
+       AForwardMessageIsSentToTheMotorWhenRoboCaddieStatusIsFORWARD) {
+
+  std::vector<uint8_t> forwardMsg = {0x04, 0x01, 0x0A, 0x57, 0x0E, 0x64, 0x00,
+                                     0x00, 0x00, 0x64, 0x00, 0x00, 0x00, 0xC8};
+
+  EXPECT_CALL(uart, transmit(forwardMsg)).Times(1);
+
+  robocaddie.setStatus(RoboCaddie::FORWARD);
+  robocaddie.transmission();
+}
+
+TEST_F(RoboCaddieFixture,
        RoboCaddieDoesNotSendTransmissionIfIntervalIsShorterThan30Ms) {
   EXPECT_CALL(time, isTick(30)).WillOnce(Return(false));
 
