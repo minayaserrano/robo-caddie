@@ -3,6 +3,7 @@
 using namespace RoboCaddieUART;
 
 const int RoboCaddie::STOP;
+const int RoboCaddie::FORWARD;
 
 int UARTWrapperStatic(unsigned char *data, int len) {
   if (g_instance) {
@@ -22,7 +23,9 @@ RoboCaddie::~RoboCaddie() {
   }
 }
 
-int RoboCaddie::getStatus() { return STOP; }
+int RoboCaddie::getStatus() { return status; }
+
+void RoboCaddie::setStatus(const int command) { status = command; }
 
 void RoboCaddie::init() { uart.init(); }
 

@@ -11,6 +11,7 @@ private:
   RoboCaddieUART::UART &uart;
   TimeService &time;
   HoverboardAPI hover;
+  int status = RoboCaddie::STOP;
   const uint8_t TRANSMISSION_TICKER_INTERVAL_IN_MILLISECONDS = 30;
 
   int UARTWrapper(unsigned char *data, int len);
@@ -18,10 +19,12 @@ private:
 
 public:
   static const int STOP = 0;
+  static const int FORWARD = 1;
 
   RoboCaddie(RoboCaddieUART::UART &, TimeService &);
   ~RoboCaddie();
   int getStatus();
+  void setStatus(const int command);
   void init();
   void transmission();
   void run();
