@@ -27,6 +27,12 @@ TEST_F(RoboCaddieFixture, RoboCaddieIsStoppedOnStartup) {
   EXPECT_EQ(RoboCaddie::STOP, robocaddie.getStatus());
 }
 
+TEST_F(RoboCaddieFixture, RoboCaddieStatusIsFORWARDOnCommandFORWARD) {
+  robocaddie.setStatus(RoboCaddie::FORWARD);
+
+  EXPECT_EQ(RoboCaddie::FORWARD, robocaddie.getStatus());
+}
+
 TEST_F(RoboCaddieFixture,
        AStopMessageIsSentToTheMotorWhenRoboCaddieStatusIsSTOP) {
   const uint8_t PROTOCOL_MSG2_SOM = 0x04;  // PROTOCOL_SOM_NOACK
@@ -61,6 +67,18 @@ TEST_F(RoboCaddieFixture,
 
   EXPECT_CALL(uart, transmit(stop_msg)).Times(1);
 
+  robocaddie.transmission();
+}
+
+TEST_F(RoboCaddieFixture,
+       AForwardMessageIsSentToTheMotorWhenRoboCaddieStatusIsFORWARD) {
+
+  std::vector<uint8_t> forwardMsg = {0x04, 0x01, 0x0A, 0x57, 0x0E, 0x64, 0x00,
+                                     0x00, 0x00, 0x64, 0x00, 0x00, 0x00, 0xC8};
+
+  EXPECT_CALL(uart, transmit(forwardMsg)).Times(1);
+
+  robocaddie.setStatus(RoboCaddie::FORWARD);
   robocaddie.transmission();
 }
 
