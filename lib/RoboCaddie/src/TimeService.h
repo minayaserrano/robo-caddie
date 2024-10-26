@@ -6,7 +6,7 @@
 class TimeService {
 public:
   TimeService() {}
-  ~TimeService() {}
+  virtual ~TimeService() {}
   virtual bool isTick(const uint16_t milliseconds) = 0;
 };
 

@@ -108,4 +108,23 @@ TEST_F(RoboCaddieFixture, UARTInitializedOnRoboCaddieInitialization) {
   robocaddie.init();
 }
 
+TEST_F(RoboCaddieFixture, ConsecutiveMessagesIncreaseCIAndDecreaseCSvalues) {
+  std::vector<uint8_t> stopMsg1 = {0x04, 0x01, 0x0A, 0x57, 0x0E, 0x00, 0x00,
+                                   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x90};
+
+  std::vector<uint8_t> stopMsg2 = {0x04, 0x02, 0x0A, 0x57, 0x0E, 0x00, 0x00,
+                                   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x8F};
+
+  std::vector<uint8_t> stopMsg3 = {0x04, 0x03, 0x0A, 0x57, 0x0E, 0x00, 0x00,
+                                   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x8E};
+
+  EXPECT_CALL(uart, transmit(stopMsg1)).Times(1);
+  EXPECT_CALL(uart, transmit(stopMsg2)).Times(1);
+  EXPECT_CALL(uart, transmit(stopMsg3)).Times(1);
+
+  robocaddie.transmission();
+  robocaddie.transmission();
+  robocaddie.transmission();
+}
+
 #endif

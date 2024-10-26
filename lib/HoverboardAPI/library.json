@@ -1,0 +1,23 @@
+{
+  "name": "HoverboardAPI",
+  "keywords": "hoverboard",
+  "description": "A Hoverboard API controller Interface.",
+  "license": "MIT",
+  "homepage": "https://github.com/bipropellant/bipropellant-hoverboard-api.git",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bipropellant/bipropellant-hoverboard-api.git"
+  },
+  "version": "0.1.1",
+  "frameworks": "*",
+  "platforms": "*",
+  "export": {
+    "include": [
+      "src"
+    ]
+  },
+  "headers": [
+    "HoverboardAPI.h",
+    "protocolFunctions.h"
+  ]
+}

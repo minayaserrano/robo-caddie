@@ -2,8 +2,10 @@
 
 #include <gtest/gtest.h>
 
+#include "HoverboardAPI.h"
 #include "TimeService.h"
 #include "UART.h"
+
 #include "contract/ArduinoSerial1UARTTests.h"
 #include "contract/ArduinoTimeServiceTests.h"
 
