@@ -1,9 +1,7 @@
 #include "RoboCaddie.h"
 
-using namespace RoboCaddieUART;
-
-const int RoboCaddie::STOP;
-const int RoboCaddie::FORWARD;
+const uint8_t RoboCaddie::STOP;
+const uint8_t RoboCaddie::FORWARD;
 
 int UARTWrapperStatic(unsigned char *data, int len) {
   if (g_instance) {
@@ -23,14 +21,14 @@ RoboCaddie::~RoboCaddie() {
   }
 }
 
-int RoboCaddie::getStatus() { return status; }
+uint8_t RoboCaddie::getStatus() { return status; }
 
-void RoboCaddie::setStatus(const int command) { status = command; }
+void RoboCaddie::setStatus(const uint8_t command) { status = command; }
 
 void RoboCaddie::init() { uart.init(); }
 
 void RoboCaddie::transmission() {
-  if (status == RoboCaddie::FORWARD) {
+  if (status == FORWARD) {
     hover.sendPWM(100, 0, PROTOCOL_SOM_NOACK);
   } else {
     hover.sendPWM(0, 0, PROTOCOL_SOM_NOACK);

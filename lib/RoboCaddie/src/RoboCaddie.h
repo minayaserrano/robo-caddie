@@ -11,20 +11,20 @@ private:
   RoboCaddieUART::UART &uart;
   TimeService &time;
   HoverboardAPI hover;
-  int status = RoboCaddie::STOP;
+  uint8_t status = STOP;
   const uint8_t TRANSMISSION_TICKER_INTERVAL_IN_MILLISECONDS = 30;
 
   int UARTWrapper(unsigned char *data, int len);
   friend int UARTWrapperStatic(unsigned char *data, int len);
 
 public:
-  static const int STOP = 0;
-  static const int FORWARD = 1;
+  static const uint8_t STOP = 0;
+  static const uint8_t FORWARD = 1;
 
   RoboCaddie(RoboCaddieUART::UART &, TimeService &);
   ~RoboCaddie();
-  int getStatus();
-  void setStatus(const int command);
+  uint8_t getStatus();
+  void setStatus(const uint8_t command);
   void init();
   void transmission();
   void run();
