@@ -4,13 +4,13 @@
   - ~~RoboCaddie sends a STOP message to the motor when it is stopped~~
   - ~~RoboCaddie transmits a message to the motor every 30ms~~
   - ~~Arduino Nano 33 BLE support~~
-  - Go to metal:
-    - Main loop
+  - ~~Go to metal:~~
+    - ~~Main loop~~
     - ~~Arduino UART implementation~~
       - ~~UART baud rate initialization~~
     - ~~Arduino TimeService implementation~~
     - ~~Consecutive messages should increase CI (Continuity counter) and decrease CS (CheckSum) values~~
-- RoboCaddie goes forward when it receives a forward command
+- ~~RoboCaddie goes forward when it receives a forward command~~
 - RoboCaddie goes backward when it receives a backward command
 - RoboCaddie goes left when it receives a left command
 - RoboCaddie goes right when it receives a right command
