@@ -11,7 +11,7 @@
     - ~~Arduino TimeService implementation~~
     - ~~Consecutive messages should increase CI (Continuity counter) and decrease CS (CheckSum) values~~
 - ~~RoboCaddie goes forward when it receives a forward command~~
-- RoboCaddie goes backward when it receives a backward command
+- ~~RoboCaddie goes backward when it receives a backward command~~
 - RoboCaddie goes left when it receives a left command
 - RoboCaddie goes right when it receives a right command
 - RoboCaddie goes {direction} when it receives a {direction} command
