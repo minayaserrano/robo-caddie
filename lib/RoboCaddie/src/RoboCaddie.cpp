@@ -31,6 +31,8 @@ void RoboCaddie::init() { uart.init(); }
 void RoboCaddie::transmission() {
   if (status == FORWARD) {
     hover.sendPWM(100, 0, PROTOCOL_SOM_NOACK);
+  } else if (status == BACKWARD) {
+    hover.sendPWM(-100, 0, PROTOCOL_SOM_NOACK);
   } else {
     hover.sendPWM(0, 0, PROTOCOL_SOM_NOACK);
   }
