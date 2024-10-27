@@ -33,6 +33,12 @@ TEST_F(RoboCaddieFixture, RoboCaddieStatusIsFORWARDOnCommandFORWARD) {
   EXPECT_EQ(RoboCaddie::FORWARD, robocaddie.getStatus());
 }
 
+TEST_F(RoboCaddieFixture, RoboCaddieStatusIsBACKWARDOnCommandBACKWARD) {
+  robocaddie.setStatus(RoboCaddie::BACKWARD);
+
+  EXPECT_EQ(RoboCaddie::BACKWARD, robocaddie.getStatus());
+}
+
 TEST_F(RoboCaddieFixture,
        AStopMessageIsSentToTheMotorWhenRoboCaddieStatusIsSTOP) {
   const uint8_t PROTOCOL_MSG2_SOM = 0x04;  // PROTOCOL_SOM_NOACK

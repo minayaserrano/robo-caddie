@@ -2,6 +2,7 @@
 
 const uint8_t RoboCaddie::STOP;
 const uint8_t RoboCaddie::FORWARD;
+const uint8_t RoboCaddie::BACKWARD;
 
 int UARTWrapperStatic(unsigned char *data, int len) {
   if (g_instance) {
