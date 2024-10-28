@@ -5,6 +5,7 @@
 const uint8_t RoboCaddie::STOP;
 const uint8_t RoboCaddie::FORWARD;
 const uint8_t RoboCaddie::BACKWARD;
+const uint8_t RoboCaddie::RIGHT;
 
 int UARTWrapperStatic(unsigned char *data, int len) {
   if (g_instance) {
@@ -36,7 +37,7 @@ void RoboCaddie::transmission() {
       {STOP, {0, 0}},
       {FORWARD, {100, 0}},
       {BACKWARD, {-100, 0}},
-  };
+      {RIGHT, {0, 100}}};
   int16_t power = 0;
   int16_t steer = 0;
 
