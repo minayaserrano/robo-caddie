@@ -22,6 +22,7 @@ public:
   static const uint8_t FORWARD = 1;
   static const uint8_t BACKWARD = 2;
   static const uint8_t RIGHT = 3;
+  static const uint8_t LEFT = 4;
 
   RoboCaddie(RoboCaddieUART::UART &, TimeService &);
   ~RoboCaddie();

@@ -66,7 +66,11 @@ INSTANTIATE_TEST_SUITE_P(
                     RoboCaddieMessageFixtureData{RoboCaddie::RIGHT,
                                                  {0x04, 0x01, 0x0A, 0x57, 0x0E,
                                                   0x64, 0x00, 0x00, 0x00, 0x9C,
-                                                  0xFF, 0xFF, 0xFF, 0x93}}));
+                                                  0xFF, 0xFF, 0xFF, 0x93}},
+                    RoboCaddieMessageFixtureData{RoboCaddie::LEFT,
+                                                 {0x04, 0x01, 0x0A, 0x57, 0x0E,
+                                                  0x9C, 0xFF, 0xFF, 0xFF, 0x64,
+                                                  0x00, 0x00, 0x00, 0x93}}));
 
 TEST_P(RoboCaddieMessageFixture,
        AMessageIsSentToTheMotorWhenRoboCaddieStatusIsX) {
