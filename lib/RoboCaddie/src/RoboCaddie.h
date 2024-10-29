@@ -7,30 +7,39 @@
 #include "UART.h"
 
 class RoboCaddie {
+public:
+  enum class Status {
+    STOP = 0,
+    FORWARD = 1,
+    BACKWARD = 2,
+    RIGHT = 3,
+    LEFT = 4
+  };
+  enum class Command {
+    STOP = 0,
+    FORWARD = 1,
+    BACKWARD = 2,
+    RIGHT = 3,
+    LEFT = 4
+  };
+
+  RoboCaddie(RoboCaddieUART::UART &, TimeService &);
+  ~RoboCaddie();
+  Status getStatus();
+  void setStatus(const Command command);
+  void init();
+  void transmission();
+  void run();
+
 private:
   RoboCaddieUART::UART &uart;
   TimeService &time;
   HoverboardAPI hover;
-  uint8_t status = STOP;
+  Status status = Status::STOP;
   const uint8_t TRANSMISSION_TICKER_INTERVAL_IN_MILLISECONDS = 30;
 
   int UARTWrapper(unsigned char *data, int len);
   friend int UARTWrapperStatic(unsigned char *data, int len);
-
-public:
-  static const uint8_t STOP = 0;
-  static const uint8_t FORWARD = 1;
-  static const uint8_t BACKWARD = 2;
-  static const uint8_t RIGHT = 3;
-  static const uint8_t LEFT = 4;
-
-  RoboCaddie(RoboCaddieUART::UART &, TimeService &);
-  ~RoboCaddie();
-  uint8_t getStatus();
-  void setStatus(const uint8_t command);
-  void init();
-  void transmission();
-  void run();
 };
 
 static RoboCaddie *g_instance = nullptr;

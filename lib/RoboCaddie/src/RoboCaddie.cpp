@@ -2,12 +2,6 @@
 
 #include "RoboCaddie.h"
 
-const uint8_t RoboCaddie::STOP;
-const uint8_t RoboCaddie::FORWARD;
-const uint8_t RoboCaddie::BACKWARD;
-const uint8_t RoboCaddie::RIGHT;
-const uint8_t RoboCaddie::LEFT;
-
 int UARTWrapperStatic(unsigned char *data, int len) {
   if (g_instance) {
     return g_instance->UARTWrapper(data, len);
@@ -26,30 +20,43 @@ RoboCaddie::~RoboCaddie() {
   }
 }
 
-uint8_t RoboCaddie::getStatus() { return status; }
+RoboCaddie::Status RoboCaddie::getStatus() { return status; }
 
-void RoboCaddie::setStatus(const uint8_t command) { status = command; }
+void RoboCaddie::setStatus(const Command command) {
+  static const std::map<Command, Status> statusValues = {
+      {Command::STOP, Status::STOP},
+      {Command::FORWARD, Status::FORWARD},
+      {Command::BACKWARD, Status::BACKWARD},
+      {Command::RIGHT, Status::RIGHT},
+      {Command::LEFT, Status::LEFT}};
+
+  auto iterator = statusValues.find(command);
+
+  if (iterator != statusValues.end()) {
+    status = iterator->second;
+  } else {
+    status = Status::STOP;
+  }
+}
 
 void RoboCaddie::init() { uart.init(); }
 
 void RoboCaddie::transmission() {
   // PWMValues: {status, {power, steer}}
-  static const std::map<uint8_t, std::pair<uint16_t, uint16_t>> pwmValues = {
-      {STOP, {0, 0}},
-      {FORWARD, {100, 0}},
-      {BACKWARD, {-100, 0}},
-      {RIGHT, {0, 100}},
-      {LEFT, {0, -100}}};
-  int16_t power = 0;
-  int16_t steer = 0;
+  static const std::map<Status, std::pair<uint16_t, uint16_t>> pwmValues = {
+      {Status::STOP, {0, 0}},
+      {Status::FORWARD, {100, 0}},
+      {Status::BACKWARD, {-100, 0}},
+      {Status::RIGHT, {0, 100}},
+      {Status::LEFT, {0, -100}}};
 
   auto iterator = pwmValues.find(status);
   if (iterator != pwmValues.end()) {
-    power = iterator->second.first;
-    steer = iterator->second.second;
+    hover.sendPWM(iterator->second.first, iterator->second.second,
+                  PROTOCOL_SOM_NOACK);
+  } else {
+    hover.sendPWM(0, 0, PROTOCOL_SOM_NOACK);
   }
-
-  hover.sendPWM(power, steer, PROTOCOL_SOM_NOACK);
 }
 
 void RoboCaddie::run() {

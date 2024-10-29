@@ -16,6 +16,7 @@
 - ~~RoboCaddie goes right when it receives a right command~~
 - ~~RoboCaddie goes {direction} when it receives a {direction} command~~
 - ~~RoboCaddie stops when it receives a stop command~~
+- ~~Disallow invalid commands and statuses~~
 - RoboCaddie stops when not receives any command for 500ms
 - RoboCaddie goes forward left if it is going forward and it receives a left command
 - RoboCaddie goes forward left if it is going left and it receives a forward command
