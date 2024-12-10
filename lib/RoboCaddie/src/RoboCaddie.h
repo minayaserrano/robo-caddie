@@ -28,7 +28,6 @@ public:
   Status getStatus();
   void setStatus(const Command command);
   void init();
-  void transmission();
   void run();
 
 private:
@@ -38,6 +37,7 @@ private:
   Status status = Status::STOP;
   const uint8_t TRANSMISSION_TICKER_INTERVAL_IN_MILLISECONDS = 30;
 
+  void transmission();
   int UARTWrapper(unsigned char *data, int len);
   friend int UARTWrapperStatic(unsigned char *data, int len);
 };

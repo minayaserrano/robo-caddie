@@ -22,6 +22,7 @@ protected:
 
   RoboCaddieFixture() : robocaddie(uart, time) {}
 };
+
 TEST_F(RoboCaddieFixture, RoboCaddieIsStoppedOnStartup) {
   EXPECT_EQ(RoboCaddie::Status::STOP, robocaddie.getStatus());
 }
@@ -98,9 +99,10 @@ INSTANTIATE_TEST_SUITE_P(
 TEST_P(RoboCaddieMessageFixture,
        AMessageIsSentToTheMotorWhenRoboCaddieStatusIsX) {
   EXPECT_CALL(uart, transmit(GetParam().expectedMessage)).Times(1);
+  EXPECT_CALL(time, isTick(_)).WillOnce(Return(true));
 
   robocaddie.setStatus(GetParam().command);
-  robocaddie.transmission();
+  robocaddie.run();
 }
 
 TEST_F(RoboCaddieFixture,
@@ -160,10 +162,14 @@ TEST_F(RoboCaddieFixture, ConsecutiveMessagesIncreaseCIAndDecreaseCSvalues) {
   EXPECT_CALL(uart, transmit(stopMsg1)).Times(1);
   EXPECT_CALL(uart, transmit(stopMsg2)).Times(1);
   EXPECT_CALL(uart, transmit(stopMsg3)).Times(1);
+  EXPECT_CALL(time, isTick(_))
+      .WillOnce(Return(true))
+      .WillOnce(Return(true))
+      .WillOnce(Return(true));
 
-  robocaddie.transmission();
-  robocaddie.transmission();
-  robocaddie.transmission();
+  robocaddie.run();
+  robocaddie.run();
+  robocaddie.run();
 }
 
 #endif
