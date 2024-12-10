@@ -20,8 +20,6 @@ RoboCaddie::~RoboCaddie() {
   }
 }
 
-RoboCaddie::Status RoboCaddie::getStatus() { return status; }
-
 void RoboCaddie::setStatus(const Command command) {
   static const std::map<Command, Status> statusValues = {
       {Command::STOP, Status::STOP},

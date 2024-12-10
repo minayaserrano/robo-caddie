@@ -24,40 +24,18 @@ protected:
 };
 
 TEST_F(RoboCaddieFixture, RoboCaddieIsStoppedOnStartup) {
-  EXPECT_EQ(RoboCaddie::Status::STOP, robocaddie.getStatus());
+  std::vector<uint8_t> stopMsg1 = {0x04, 0x01, 0x0A, 0x57, 0x0E, 0x00, 0x00,
+                                   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x90};
+  EXPECT_CALL(uart, transmit(stopMsg1)).Times(1);
+  EXPECT_CALL(time, isTick(_)).WillOnce(Return(true));
+
+  robocaddie.run();
 }
 
 struct RoboCaddieStatusFixtureData {
   const RoboCaddie::Command command;
   const RoboCaddie::Status status;
 };
-
-class RoboCaddieStatusFixture
-    : public RoboCaddieFixture,
-      public testing::WithParamInterface<RoboCaddieStatusFixtureData> {};
-
-INSTANTIATE_TEST_SUITE_P(
-    RoboCaddieStatus, RoboCaddieStatusFixture,
-    testing::Values(RoboCaddieStatusFixtureData{RoboCaddie::Command::STOP,
-                                                RoboCaddie::Status::STOP},
-                    RoboCaddieStatusFixtureData{RoboCaddie::Command::FORWARD,
-                                                RoboCaddie::Status::FORWARD},
-                    RoboCaddieStatusFixtureData{RoboCaddie::Command::BACKWARD,
-                                                RoboCaddie::Status::BACKWARD},
-                    RoboCaddieStatusFixtureData{RoboCaddie::Command::RIGHT,
-                                                RoboCaddie::Status::RIGHT},
-                    RoboCaddieStatusFixtureData{RoboCaddie::Command::LEFT,
-                                                RoboCaddie::Status::LEFT},
-                    // Invalid command
-                    RoboCaddieStatusFixtureData{
-                        static_cast<RoboCaddie::Command>(127),
-                        RoboCaddie::Status::STOP}));
-
-TEST_P(RoboCaddieStatusFixture, RoboCaddieStatusIsXOnCommandX) {
-  robocaddie.setStatus(GetParam().command);
-
-  EXPECT_EQ(GetParam().status, robocaddie.getStatus());
-}
 
 struct RoboCaddieMessageFixtureData {
   const RoboCaddie::Command command;

@@ -9,7 +9,7 @@ ArduinoTimeService timeservice;
 ArduinoTimeService arduinoTimeService;
 RoboCaddie robocaddie(uart, timeservice);
 
-RoboCaddie::Command command = RoboCaddie::Command::STOP
+RoboCaddie::Command command = RoboCaddie::Command::STOP;
 
 void setup() {
   delay(2000);
