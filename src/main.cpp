@@ -9,6 +9,8 @@ ArduinoTimeService timeservice;
 ArduinoTimeService arduinoTimeService;
 RoboCaddie robocaddie(uart, timeservice);
 
+RoboCaddie::Command command = RoboCaddie::Command::STOP
+
 void setup() {
   delay(2000);
   robocaddie.init();
@@ -17,11 +19,12 @@ void setup() {
 
 void loop() {
   if (arduinoTimeService.isTick(3000)) {
-    if (robocaddie.getStatus() == 0) {
-      robocaddie.setStatus(RoboCaddie::FORWARD);
+    if (command == RoboCaddie::Command::STOP) {
+      command = RoboCaddie::Command::FORWARD;
     } else {
-      robocaddie.setStatus(RoboCaddie::STOP);
+      command = RoboCaddie::Command::STOP;
     }
+    robocaddie.setStatus(command);
   }
   robocaddie.run();
 }
