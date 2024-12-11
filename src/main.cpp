@@ -24,9 +24,8 @@ void loop() {
     } else {
       command = RoboCaddie::Command::STOP;
     }
-    robocaddie.setStatus(command);
   }
-  robocaddie.run();
+  robocaddie.run(command);
 }
 #endif
 

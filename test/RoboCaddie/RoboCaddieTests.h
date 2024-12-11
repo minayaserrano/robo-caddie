@@ -79,8 +79,7 @@ TEST_P(RoboCaddieMessageFixture,
   EXPECT_CALL(uart, transmit(GetParam().expectedMessage)).Times(1);
   EXPECT_CALL(time, isTick(_)).WillOnce(Return(true));
 
-  robocaddie.setStatus(GetParam().command);
-  robocaddie.run();
+  robocaddie.run(GetParam().command);
 }
 
 TEST_F(RoboCaddieFixture,

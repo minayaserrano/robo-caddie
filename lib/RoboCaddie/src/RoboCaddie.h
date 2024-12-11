@@ -25,9 +25,9 @@ public:
 
   RoboCaddie(RoboCaddieUART::UART &, TimeService &);
   ~RoboCaddie();
-  void setStatus(const Command command);
   void init();
   void run();
+  void run(const Command command);
 
 private:
   RoboCaddieUART::UART &uart;
@@ -36,6 +36,7 @@ private:
   Status status = Status::STOP;
   const uint8_t TRANSMISSION_TICKER_INTERVAL_IN_MILLISECONDS = 30;
 
+  void execute(const Command command);
   void transmission();
   int UARTWrapper(unsigned char *data, int len);
   friend int UARTWrapperStatic(unsigned char *data, int len);

@@ -20,7 +20,7 @@ RoboCaddie::~RoboCaddie() {
   }
 }
 
-void RoboCaddie::setStatus(const Command command) {
+void RoboCaddie::execute(const Command command) {
   static const std::map<Command, Status> statusValues = {
       {Command::STOP, Status::STOP},
       {Command::FORWARD, Status::FORWARD},
@@ -55,6 +55,11 @@ void RoboCaddie::transmission() {
   } else {
     hover.sendPWM(0, 0, PROTOCOL_SOM_NOACK);
   }
+}
+
+void RoboCaddie::run(const Command command) {
+  execute(command);
+  run();
 }
 
 void RoboCaddie::run() {
