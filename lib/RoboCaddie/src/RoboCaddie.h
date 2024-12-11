@@ -6,6 +6,9 @@
 #include "TimeService.h"
 #include "UART.h"
 
+#include "Command.h"
+#include "InputController.h"
+
 class RoboCaddie {
 public:
   enum class Status {
@@ -15,23 +18,16 @@ public:
     RIGHT = 3,
     LEFT = 4
   };
-  enum class Command {
-    STOP = 0,
-    FORWARD = 1,
-    BACKWARD = 2,
-    RIGHT = 3,
-    LEFT = 4
-  };
 
-  RoboCaddie(RoboCaddieUART::UART &, TimeService &);
+  RoboCaddie(RoboCaddieUART::UART &, TimeService &, InputController &);
   ~RoboCaddie();
   void init();
   void run();
-  void run(const Command command);
 
 private:
   RoboCaddieUART::UART &uart;
   TimeService &time;
+  InputController &inputController;
   HoverboardAPI hover;
   Status status = Status::STOP;
   const uint8_t TRANSMISSION_TICKER_INTERVAL_IN_MILLISECONDS = 30;

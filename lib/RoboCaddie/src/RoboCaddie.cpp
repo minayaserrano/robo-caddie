@@ -9,8 +9,10 @@ int UARTWrapperStatic(unsigned char *data, int len) {
   return -1;
 }
 
-RoboCaddie::RoboCaddie(RoboCaddieUART::UART &uart, TimeService &time)
-    : uart(uart), time(time), hover(UARTWrapperStatic) {
+RoboCaddie::RoboCaddie(RoboCaddieUART::UART &uart, TimeService &time,
+                       InputController &inputController)
+    : uart(uart), time(time), inputController(inputController),
+      hover(UARTWrapperStatic) {
   g_instance = this;
 }
 
@@ -37,7 +39,10 @@ void RoboCaddie::execute(const Command command) {
   }
 }
 
-void RoboCaddie::init() { uart.init(); }
+void RoboCaddie::init() {
+  uart.init();
+  inputController.init();
+}
 
 void RoboCaddie::transmission() {
   // PWMValues: {status, {power, steer}}
@@ -57,14 +62,14 @@ void RoboCaddie::transmission() {
   }
 }
 
-void RoboCaddie::run(const Command command) {
-  execute(command);
-  run();
-}
-
 void RoboCaddie::run() {
-  if (time.isTick(TRANSMISSION_TICKER_INTERVAL_IN_MILLISECONDS)) {
-    transmission();
+  inputController.connect();
+  while (inputController.isConnected()) {
+    Command command = inputController.readCommand();
+    execute(command);
+    if (time.isTick(TRANSMISSION_TICKER_INTERVAL_IN_MILLISECONDS)) {
+      transmission();
+    }
   }
 }
 

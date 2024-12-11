@@ -6,6 +6,8 @@
 #include "RoboCaddie.h"
 #include "RoboCaddie/RoboCaddieTests.h"
 
+#include "RoboCaddie/InputControllerTests.h"
+
 int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);
 
