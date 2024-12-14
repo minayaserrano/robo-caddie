@@ -46,7 +46,7 @@ void RoboCaddie::init() {
 
 void RoboCaddie::transmission() {
   // PWMValues: {status, {power, steer}}
-  static const std::map<Status, std::pair<uint16_t, uint16_t>> pwmValues = {
+  static const std::map<Status, std::pair<int16_t, int16_t>> pwmValues = {
       {Status::STOP, {0, 0}},
       {Status::FORWARD, {100, 0}},
       {Status::BACKWARD, {-100, 0}},
