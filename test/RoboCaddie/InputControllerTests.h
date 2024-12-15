@@ -37,7 +37,6 @@ TEST_F(DummyControllerFixture, DoesNotChangeCommandWithoutTick) {
 }
 
 #ifdef ARDUINO
-#include <iostream>
 
 class ACGAMR1ControllerFixture : public ::testing::Test {
 protected:

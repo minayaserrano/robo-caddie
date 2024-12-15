@@ -6,8 +6,8 @@
 
 ArduinoSerial1UART uart;
 ArduinoTimeService timeservice;
-ArduinoTimeService timeserviceInputController;
 #ifdef DUMMYCONTROLLER
+ArduinoTimeService timeserviceInputController;
 DummyController inputController(timeserviceInputController);
 #else
 ACGAMR1Controller inputController;
