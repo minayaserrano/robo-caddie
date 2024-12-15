@@ -6,8 +6,13 @@
 
 ArduinoSerial1UART uart;
 ArduinoTimeService timeservice;
-ArduinoTimeService arduinoTimeService;
-RoboCaddie robocaddie(uart, timeservice);
+#ifdef DUMMYCONTROLLER
+ArduinoTimeService timeserviceInputController;
+DummyController inputController(timeserviceInputController);
+#else
+ACGAMR1Controller inputController;
+#endif
+RoboCaddie robocaddie(uart, timeservice, inputController);
 
 void setup() {
   delay(2000);
@@ -15,16 +20,8 @@ void setup() {
   delay(1000);
 }
 
-void loop() {
-  if (arduinoTimeService.isTick(3000)) {
-    if (robocaddie.getStatus() == 0) {
-      robocaddie.setStatus(RoboCaddie::FORWARD);
-    } else {
-      robocaddie.setStatus(RoboCaddie::STOP);
-    }
-  }
-  robocaddie.run();
-}
+void loop() { robocaddie.run(); }
+
 #endif
 
 #ifndef ARDUINO

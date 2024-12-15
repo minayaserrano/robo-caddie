@@ -6,6 +6,8 @@
 #include "RoboCaddie.h"
 #include "RoboCaddie/RoboCaddieTests.h"
 
+#include "RoboCaddie/InputControllerTests.h"
+
 // Fix arduino/ArduinoCore-mbed issue:
 // https://github.com/platformio/platformio-core/issues/3980#issuecomment-1500895461
 #ifndef RENODE_ENVIRONMENT
