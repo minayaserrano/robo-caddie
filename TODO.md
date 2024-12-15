@@ -17,10 +17,10 @@
 - ~~RoboCaddie goes {direction} when it receives a {direction} command~~
 - ~~RoboCaddie stops when it receives a stop command~~
 - ~~Disallow invalid commands and statuses~~
-- RoboCaddie stops on disconnect
+- ~~RoboCaddie stops on disconnect~~
 - RoboCaddie goes forward left if it is going forward and it receives a left command
 - RoboCaddie goes forward left if it is going left and it receives a forward command
-- InputController interface (ACGAMR1Controller/...)
+- ~~InputController interface (ACGAMR1Controller/...)~~
 - Output feedback interface (Serial/Display...) to show Command/Status/PWM
 - Output feedback: show hoverboard speed feedback
 - Output feedback: show hoverboard battery voltage feedback
