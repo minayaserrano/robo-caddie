@@ -12,7 +12,8 @@ DummyController inputController(timeserviceInputController);
 #else
 ACGAMR1Controller inputController;
 #endif
-RoboCaddie robocaddie(uart, timeservice, inputController);
+ArduinoSerialOutputDevice outputDevice;
+RoboCaddie robocaddie(uart, timeservice, inputController, outputDevice);
 
 void setup() {
   delay(2000);

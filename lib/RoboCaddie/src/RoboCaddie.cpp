@@ -10,9 +10,10 @@ int UARTWrapperStatic(unsigned char *data, int len) {
 }
 
 RoboCaddie::RoboCaddie(RoboCaddieUART::UART &uart, TimeService &time,
-                       InputController &inputController)
+                       InputController &inputController,
+                       OutputDevice &outputDevice)
     : uart(uart), time(time), inputController(inputController),
-      hover(UARTWrapperStatic) {
+      outputDevice(outputDevice), hover(UARTWrapperStatic) {
   g_instance = this;
 }
 
@@ -45,6 +46,8 @@ void RoboCaddie::init() {
 }
 
 void RoboCaddie::transmission() {
+  int16_t power = 0;
+  int16_t steer = 0;
   // PWMValues: {status, {power, steer}}
   static const std::map<Status, std::pair<int16_t, int16_t>> pwmValues = {
       {Status::STOP, {0, 0}},
@@ -54,12 +57,16 @@ void RoboCaddie::transmission() {
       {Status::LEFT, {0, -100}}};
 
   auto iterator = pwmValues.find(status);
+
   if (iterator != pwmValues.end()) {
-    hover.sendPWM(iterator->second.first, iterator->second.second,
-                  PROTOCOL_SOM_NOACK);
-  } else {
-    hover.sendPWM(0, 0, PROTOCOL_SOM_NOACK);
+    power = iterator->second.first;
+    steer = iterator->second.second;
   }
+
+  hover.sendPWM(power, steer, PROTOCOL_SOM_NOACK);
+
+  outputDevice.status(status);
+  outputDevice.transmission(power, steer);
 }
 
 void RoboCaddie::run() {
