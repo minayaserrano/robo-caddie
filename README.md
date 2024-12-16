@@ -10,6 +10,8 @@ A hoverboard-powered golf trolley.
 - Remote Mode: Bluetooth BLE remote control.
 - Follow Mode: Trolley follows you by uwb sensors.
 
+[TODO list](https://github.com/minayaserrano/robo-caddie/blob/main/TODO.md)
+
 ## Acknowledgments
 
 Thank you to all the contributors from the hoverboard hack community. In particular:
