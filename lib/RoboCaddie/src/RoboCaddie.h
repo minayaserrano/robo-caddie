@@ -7,19 +7,15 @@
 #include "UART.h"
 
 #include "Command.h"
+#include "Status.h"
+
 #include "InputController.h"
+#include "OutputDevice.h"
 
 class RoboCaddie {
 public:
-  enum class Status {
-    STOP = 0,
-    FORWARD = 1,
-    BACKWARD = 2,
-    RIGHT = 3,
-    LEFT = 4
-  };
-
-  RoboCaddie(RoboCaddieUART::UART &, TimeService &, InputController &);
+  RoboCaddie(RoboCaddieUART::UART &, TimeService &, InputController &,
+             OutputDevice &);
   ~RoboCaddie();
   void init();
   void run();
@@ -28,6 +24,7 @@ private:
   RoboCaddieUART::UART &uart;
   TimeService &time;
   InputController &inputController;
+  OutputDevice &outputDevice;
   HoverboardAPI hover;
   Status status = Status::STOP;
   const uint8_t TRANSMISSION_TICKER_INTERVAL_IN_MILLISECONDS = 30;
