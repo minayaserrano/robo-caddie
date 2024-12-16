@@ -30,7 +30,7 @@
 - Output feedback: show connection status (scanning/connected/disconnected)
 - New OutputDevice: Display Oled 1.3" I2C 128*64 SH1106
 - Motor gears support
-- Smooth aceleration (incremental PWM)
+- ~~Smooth aceleration (incremental PWM)~~
 - Speed mode
 - Follow me mode
 
@@ -39,3 +39,4 @@
 - Avoid volatile static Command inputControllerCommand: https://github.com/arduino-libraries/ArduinoBLE/issues/182 
 - Refactor: Extract transmission to MotorDriver interface
 - ACGAMR1 controller codes documentation
+- More unit test related to smooth acceleration
