@@ -42,7 +42,7 @@ class ACGAMR1ControllerFixture : public ::testing::Test {
 protected:
   void testCommandInterpretation(const std::vector<uint8_t> &inputData,
                                  Command expectedCommand,
-                                 const std::string &testCaseName) {
+                                 const char *testCaseName) {
     EXPECT_EQ(
         ACGAMR1Controller::parseHIDReport(inputData.data(), inputData.size()),
         expectedCommand)

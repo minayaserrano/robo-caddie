@@ -65,7 +65,8 @@ void RoboCaddie::transmission() {
 
   hover.sendPWM(power, steer, PROTOCOL_SOM_NOACK);
 
-  outputDevice.outputTransmission(power, steer);
+  outputDevice.status(status);
+  outputDevice.transmission(power, steer);
 }
 
 void RoboCaddie::run() {

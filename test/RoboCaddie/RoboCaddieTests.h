@@ -24,8 +24,8 @@ public:
 
 class MockOutputDevice : public OutputDevice {
 public:
-  MOCK_METHOD(void, outputTransmission, (int16_t power, int16_t steer),
-              (override));
+  MOCK_METHOD(void, transmission, (int16_t power, int16_t steer), (override));
+  MOCK_METHOD(void, status, (Status status), (override));
 };
 
 class RoboCaddieFixture : public ::testing::Test {
@@ -49,7 +49,8 @@ TEST_F(RoboCaddieFixture, RoboCaddieIsStoppedOnStartup) {
       .WillOnce(Return(true))
       .WillOnce(Return(false));
   EXPECT_CALL(inputController, readCommand()).WillOnce(Return(Command::STOP));
-  EXPECT_CALL(outputDevice, outputTransmission(0, 0)).Times(1);
+  EXPECT_CALL(outputDevice, status(Status::STOP)).Times(1);
+  EXPECT_CALL(outputDevice, transmission(0, 0)).Times(1);
 
   robocaddie.run();
 }
@@ -62,6 +63,7 @@ struct RoboCaddieStatusFixtureData {
 struct RoboCaddieMessageFixtureData {
   const Command command;
   std::vector<uint8_t> expectedMessage;
+  Status expectedStatus;
   int16_t expectedPower;
   int16_t expectedSteer;
 };
@@ -76,32 +78,38 @@ INSTANTIATE_TEST_SUITE_P(
         RoboCaddieMessageFixtureData{Command::STOP,
                                      {0x04, 0x01, 0x0A, 0x57, 0x0E, 0x00, 0x00,
                                       0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x90},
+                                     Status::STOP,
                                      0,
                                      0},
         RoboCaddieMessageFixtureData{Command::FORWARD,
                                      {0x04, 0x01, 0x0A, 0x57, 0x0E, 0x64, 0x00,
                                       0x00, 0x00, 0x64, 0x00, 0x00, 0x00, 0xC8},
+                                     Status::FORWARD,
                                      100,
                                      0},
         RoboCaddieMessageFixtureData{Command::BACKWARD,
                                      {0x04, 0x01, 0x0A, 0x57, 0x0E, 0x9C, 0xFF,
                                       0xFF, 0xFF, 0x9C, 0xFF, 0xFF, 0xFF, 0x5E},
+                                     Status::BACKWARD,
                                      -100,
                                      0},
         RoboCaddieMessageFixtureData{Command::RIGHT,
                                      {0x04, 0x01, 0x0A, 0x57, 0x0E, 0x64, 0x00,
                                       0x00, 0x00, 0x9C, 0xFF, 0xFF, 0xFF, 0x93},
+                                     Status::RIGHT,
                                      0,
                                      100},
         RoboCaddieMessageFixtureData{Command::LEFT,
                                      {0x04, 0x01, 0x0A, 0x57, 0x0E, 0x9C, 0xFF,
                                       0xFF, 0xFF, 0x64, 0x00, 0x00, 0x00, 0x93},
+                                     Status::LEFT,
                                      0,
                                      -100},
         // Invalid command
         RoboCaddieMessageFixtureData{static_cast<Command>(126),
                                      {0x04, 0x01, 0x0A, 0x57, 0x0E, 0x00, 0x00,
                                       0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x90},
+                                     Status::STOP,
                                      0,
                                      0}));
 
@@ -115,8 +123,9 @@ TEST_P(RoboCaddieMessageFixture,
       .WillOnce(Return(false));
   EXPECT_CALL(inputController, readCommand())
       .WillOnce(Return(GetParam().command));
-  EXPECT_CALL(outputDevice, outputTransmission(GetParam().expectedPower,
-                                               GetParam().expectedSteer))
+  EXPECT_CALL(outputDevice, status(GetParam().expectedStatus)).Times(1);
+  EXPECT_CALL(outputDevice,
+              transmission(GetParam().expectedPower, GetParam().expectedSteer))
       .Times(1);
 
   robocaddie.run();
@@ -131,7 +140,8 @@ TEST_F(RoboCaddieFixture,
       .WillOnce(Return(true))
       .WillOnce(Return(false));
   EXPECT_CALL(inputController, readCommand()).WillOnce(Return(Command::STOP));
-  EXPECT_CALL(outputDevice, outputTransmission(_, _)).Times(0);
+  EXPECT_CALL(outputDevice, status(_)).Times(0);
+  EXPECT_CALL(outputDevice, transmission(_, _)).Times(0);
 
   robocaddie.run();
 }
@@ -145,7 +155,8 @@ TEST_F(RoboCaddieFixture,
       .WillOnce(Return(true))
       .WillOnce(Return(false));
   EXPECT_CALL(inputController, readCommand()).WillOnce(Return(Command::STOP));
-  EXPECT_CALL(outputDevice, outputTransmission(_, _)).Times(1);
+  EXPECT_CALL(outputDevice, status(_)).Times(1);
+  EXPECT_CALL(outputDevice, transmission(_, _)).Times(1);
 
   robocaddie.run();
 }
@@ -163,7 +174,8 @@ TEST_F(RoboCaddieFixture, RoboCaddieSendsATransmissionEveryTick) {
       .WillOnce(Return(false))
       .WillOnce(Return(false));
   EXPECT_CALL(uart, transmit(_)).Times(3);
-  EXPECT_CALL(outputDevice, outputTransmission(_, _)).Times(3);
+  EXPECT_CALL(outputDevice, status(_)).Times(3);
+  EXPECT_CALL(outputDevice, transmission(_, _)).Times(3);
   EXPECT_CALL(inputController, connect()).Times(10);
   EXPECT_CALL(inputController, isConnected())
       .WillOnce(Return(true))
@@ -218,7 +230,8 @@ TEST_F(RoboCaddieFixture, ConsecutiveMessagesIncreaseCIAndDecreaseCSvalues) {
       .WillOnce(Return(true))
       .WillOnce(Return(true));
   EXPECT_CALL(inputController, connect()).Times(3);
-  EXPECT_CALL(outputDevice, outputTransmission(_, _)).Times(3);
+  EXPECT_CALL(outputDevice, status(_)).Times(3);
+  EXPECT_CALL(outputDevice, transmission(_, _)).Times(3);
   EXPECT_CALL(inputController, isConnected())
       .WillOnce(Return(true))
       .WillOnce(Return(false))
