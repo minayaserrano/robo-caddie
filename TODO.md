@@ -21,13 +21,14 @@
 - RoboCaddie goes forward left if it is going forward and it receives a left command
 - RoboCaddie goes forward left if it is going left and it receives a forward command
 - ~~InputController interface (ACGAMR1Controller/...)~~
-- Output feedback interface (Serial/Display...) to show RoboCaddie feedback:
-  - Transmission: power and steer
-  - RoboCaddie status
-  - InputController connection status
-  - Command received
+- ~~Output feedback interface (Serial/Display...) to show RoboCaddie feedback:~~
+  - ~~Transmission: power and steer~~
+  - ~~RoboCaddie status~~
 - Output feedback: show hoverboard feedback (speed and battery voltage)
 - Output feedback: show InputController feedback (battery voltage)
+- Output feedback: show command info
+- Output feedback: show connection status (scanning/connected/disconnected)
+- New OutputDevice: Display Oled 1.3" I2C 128*64 SH1106
 - Motor gears support
 - Smooth aceleration (incremental PWM)
 - Speed mode
