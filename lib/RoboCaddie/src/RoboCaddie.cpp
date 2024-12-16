@@ -34,6 +34,9 @@ void RoboCaddie::execute(const Command command) {
   auto iterator = statusValues.find(command);
 
   if (iterator != statusValues.end()) {
+    if (status != iterator->second) {
+      pwm = 0;
+    }
     status = iterator->second;
   } else {
     status = Status::STOP;
@@ -48,13 +51,17 @@ void RoboCaddie::init() {
 void RoboCaddie::transmission() {
   int16_t power = 0;
   int16_t steer = 0;
+
+  pwm = std::min(pwm + pwmIncrement, maxPwm + 0);
+  pwmSteer = std::min(pwmSteer + pwmSteerIncrement, maxPwmSteer + 0);
+
   // PWMValues: {status, {power, steer}}
-  static const std::map<Status, std::pair<int16_t, int16_t>> pwmValues = {
+  const std::map<Status, std::pair<int16_t, int16_t>> pwmValues = {
       {Status::STOP, {0, 0}},
-      {Status::FORWARD, {100, 0}},
-      {Status::BACKWARD, {-100, 0}},
-      {Status::RIGHT, {0, 100}},
-      {Status::LEFT, {0, -100}}};
+      {Status::FORWARD, {pwm, 0}},
+      {Status::BACKWARD, {-pwm, 0}},
+      {Status::RIGHT, {0, pwmSteer}},
+      {Status::LEFT, {0, -pwmSteer}}};
 
   auto iterator = pwmValues.find(status);
 

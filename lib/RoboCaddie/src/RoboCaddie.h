@@ -27,6 +27,12 @@ private:
   OutputDevice &outputDevice;
   HoverboardAPI hover;
   Status status = Status::STOP;
+  int16_t pwm = 0;
+  int16_t pwmSteer = 0;
+  int16_t maxPwm = 100;
+  int16_t maxPwmSteer = 100;
+  int16_t pwmIncrement = 10;
+  int16_t pwmSteerIncrement = 10;
   const uint8_t TRANSMISSION_TICKER_INTERVAL_IN_MILLISECONDS = 30;
 
   void execute(const Command command);
